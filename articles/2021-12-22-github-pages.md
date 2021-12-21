@@ -8,7 +8,7 @@ published: true
 
 本記事は [UT-virtual Advent Calendar 2021](https://qiita.com/advent-calendar/2021/ut-virtual) の22日目の投稿です.
 
-## 前置き (ほぼ身内向け)
+## 前置き (やや身内向け)
 
 ※ 技術的内容は次のセクションからですのでどうぞ読み飛ばしてください.
 
