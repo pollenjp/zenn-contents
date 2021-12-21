@@ -1,6 +1,6 @@
 ---
 title: "GitHub Pages (Jekyll) のレンダリング結果をローカルで確認する"
-# emoji: "😸"
+emoji: "🖥️"
 type: "tech"
 topics: ["githubpages", "docker", "jekyll"]
 published: true
