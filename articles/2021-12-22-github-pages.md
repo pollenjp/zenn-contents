@@ -70,9 +70,7 @@ VRサークルではあるものの私個人は直近2年ほどVR開発してな
 
 `index.md` : <https://github.com/pollenjp/sandbox-github-pages/blob/5994da3b4e687a399c8954140ed49a68c512425f/docs/index.md>
 
-<a href="https://gyazo.com/3e3396a5475185dfa83db16d1622e1f9">
-  <img src="https://i.gyazo.com/3e3396a5475185dfa83db16d1622e1f9.png" alt="Image from Gyazo" width="1065"/>
-</a>
+[![Image from Gyazo](https://i.gyazo.com/3e3396a5475185dfa83db16d1622e1f9.png)](https://gyazo.com/3e3396a5475185dfa83db16d1622e1f9)
 
 ## ローカルでレンダリング結果を確認したい
 
@@ -267,7 +265,7 @@ Configuration file: /local_run_config.yml
 
 とあるように <http://172.17.0.3:4000> にアクセスすればページが表示されます.
 
-<a href="https://gyazo.com/4890e8e635faba2ddf60cbcc4b3684bd"><img src="https://i.gyazo.com/4890e8e635faba2ddf60cbcc4b3684bd.png" alt="Image from Gyazo" width="1361"/></a>
+[![Image from Gyazo](https://i.gyazo.com/4890e8e635faba2ddf60cbcc4b3684bd.png)](https://gyazo.com/4890e8e635faba2ddf60cbcc4b3684bd)
 
 ## 最後に
 
