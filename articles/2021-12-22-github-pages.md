@@ -3,7 +3,7 @@ title: "GitHub Pages (Jekyll) のレンダリング結果をローカルで確�
 # emoji: "😸"
 type: "tech"
 topics: ["githubpages", "docker", "jekyll"]
-published: false
+published: true
 ---
 
 本記事は [UT-virtual Advent Calendar 2021](https://qiita.com/advent-calendar/2021/ut-virtual) の22日目の投稿です.
