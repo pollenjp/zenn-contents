@@ -231,7 +231,7 @@ Hoge Hoge
 
 ```local_config_path.yml
 github:
-  "http://containerhost:port"
+  url: "http://containerhost:port"
 ```
 
 ※ containerhost は実行時のコンテナのホスト, port は指定したポートに読み替えてください.
