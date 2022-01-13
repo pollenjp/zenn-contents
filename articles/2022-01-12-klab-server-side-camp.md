@@ -145,7 +145,7 @@ TableName 用のクラスを作成する等好き勝手なコードの書き方�
 
 ### Join Room
 
-- pollenjp2 が先ほど作成した
+- pollenjp2 が先ほど作成した部屋に入ります.
 
 [![Image from Gyazo](https://i.gyazo.com/ccb92cb0b435206c91a231367e355883.png)](https://gyazo.com/ccb92cb0b435206c91a231367e355883)
 
