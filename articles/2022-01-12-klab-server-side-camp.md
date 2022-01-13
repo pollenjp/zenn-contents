@@ -150,7 +150,7 @@ TableName 用のクラスを作成する等好き勝手なコードの書き方�
 
 - 今回はテストのため同時接続数を2に制限しているため3人目の入室を拒んでいます.
 
-[![Image from Gyazo](https://i.gyazo.com/35096fbbcd252b374bd67a121d525c43.png)](https://gyazo.com/35096fbbcd252b374bd67a121d525c43)
+[![Image from Gyazo](https://i.gyazo.com/c66f1d280ece2a92dc68df95adb45d66.png)](https://gyazo.com/c66f1d280ece2a92dc68df95adb45d66)
 
 ### Start
 
