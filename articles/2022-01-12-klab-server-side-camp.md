@@ -1,7 +1,7 @@
 ---
 title: "KLab の Server Side Camp に参加してきました"
 emoji: "🖥️"
-type: "tech"
+type: "idea"
 topics: ["ポエム"]
 published: false
 ---
