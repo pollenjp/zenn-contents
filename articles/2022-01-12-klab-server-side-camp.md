@@ -16,7 +16,9 @@ published: false
 
 ## 告知
 
-[KLab Server Side Camp 第2回](https://klab-hr.snar.jp/jobboard/detail.aspx?id=KAmfKyX-LPE) の募集が 1/24(月) 23:59 まで行われているので興味を持った方はぜひ!! (日程：3/10(木)～16(水) ※平日5日間)
+[KLab Server Side Camp 第2回](https://klab-hr.snar.jp/jobboard/detail.aspx?id=KAmfKyX-LPE) の募集が 1/24(月) 23:59 まで行われているので興味を持った方はぜひ!!
+
+@[tweet](https://twitter.com/oktillion27/status/1469249287863545856?s=20)
 
 ## KLab Server Side Camp とは
 
