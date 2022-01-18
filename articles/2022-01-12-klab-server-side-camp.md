@@ -70,7 +70,7 @@ Ubuntu/Linux機を持っていることもありローカルでの開発環境�
 @[tweet](https://twitter.com/polleninjp/status/1476605747375251459?s=20)
 
 2022/01/12現在
-[![Image from Gyazo](https://i.gyazo.com/c16ab27633900b84c970c186f5fbddf5.png)](https://gyazo.com/c16ab27633900b84c970c186f5fbddf5)
+![Image from Gyazo](https://i.gyazo.com/c16ab27633900b84c970c186f5fbddf5.png)
 
 > Sign up for the Codespaces beta
 > Join the Codespaces beta waitlist to get a cloud development environment you can access from anywhere. We’d love to hear your feedback while you’re trying this new feature.
@@ -133,40 +133,40 @@ TableName 用のクラスを作成する等好き勝手なコードの書き方�
 
 - pollenjp1-3 のユーザを作成
 
-[![Image from Gyazo](https://i.gyazo.com/61f05a86cb55a3c627496313087d501b.png)](https://gyazo.com/61f05a86cb55a3c627496313087d501b)
-[![Image from Gyazo](https://i.gyazo.com/6172b770b4d488029296868e6f88e521.png)](https://gyazo.com/6172b770b4d488029296868e6f88e521)
+![Image from Gyazo](https://i.gyazo.com/61f05a86cb55a3c627496313087d501b.png)
+![Image from Gyazo](https://i.gyazo.com/6172b770b4d488029296868e6f88e521.png)
 
 ### Create Room
 
 - マルチプレイ用Room作成
 - pollenjp1 がホスト
 
-[![Image from Gyazo](https://i.gyazo.com/0ae964471cd90df1c1620396d8544385.png)](https://gyazo.com/0ae964471cd90df1c1620396d8544385)
+![Image from Gyazo](https://i.gyazo.com/0ae964471cd90df1c1620396d8544385.png)
 
 ### Join Room
 
 - pollenjp2 が先ほど作成した部屋に入ります.
 
-[![Image from Gyazo](https://i.gyazo.com/ccb92cb0b435206c91a231367e355883.png)](https://gyazo.com/ccb92cb0b435206c91a231367e355883)
+![Image from Gyazo](https://i.gyazo.com/ccb92cb0b435206c91a231367e355883.png)
 
 ### Join Room (RoomFull)
 
 - 今回はテストのため同時接続数を2に制限しているため3人目の入室を拒んでいます.
 - pollenjp3 が既に満室のルームへ参加しようとして拒まれています.
 
-[![Image from Gyazo](https://i.gyazo.com/c66f1d280ece2a92dc68df95adb45d66.png)](https://gyazo.com/c66f1d280ece2a92dc68df95adb45d66)
+![Image from Gyazo](https://i.gyazo.com/c66f1d280ece2a92dc68df95adb45d66.png)
 
 ### Start
 
 - Host 側にのみ「ライブ開始」ボタンが表示されているのでホストがボタンを押しタイミングでお互いのゲームが開始します.
 
-[![Image from Gyazo](https://i.gyazo.com/57511744d385981e4bc350dc329212a0.png)](https://gyazo.com/57511744d385981e4bc350dc329212a0)
+![Image from Gyazo](https://i.gyazo.com/57511744d385981e4bc350dc329212a0.png)
 
 ### Result
 
 - 同じルームにいる人のスコア等を表示します.
 
-[![Image from Gyazo](https://i.gyazo.com/2c1e96c1378700284d5f338b85fe058e.png)](https://gyazo.com/2c1e96c1378700284d5f338b85fe058e)
+![Image from Gyazo](https://i.gyazo.com/2c1e96c1378700284d5f338b85fe058e.png)
 
 以上
 
