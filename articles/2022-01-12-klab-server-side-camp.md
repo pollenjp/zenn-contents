@@ -14,6 +14,11 @@ published: true
 軽い振り返りなので技術的な内容は少なめです^^
 また, 久々に記事書くので文章がおかしくなっているかも...
 
+追記 (2021/01/19)
+メンターの methane さんによるKLab技術ブログ (「DSAS開発者の部屋」) は以下のツイートからどうぞ.
+
+@[tweet](https://twitter.com/methane/status/1481929104614379523?s=20)
+
 ## 告知
 
 [KLab Server Side Camp 第2回](https://klab-hr.snar.jp/jobboard/detail.aspx?id=KAmfKyX-LPE) の募集が 1/24(月) 23:59 まで行われているので興味を持った方はぜひ!!
