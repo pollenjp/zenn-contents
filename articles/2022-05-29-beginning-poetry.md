@@ -1,10 +1,12 @@
 ---
 title: "Poetry: 最初にこれだけおぼえておけば一応使えるメモ"
-emoji: ""
+emoji: "🐍"
 type: "tech"
-topics: ["poetry"]
+topics: ["poetry", "python"]
 published: false
 ---
+
+[Poetry](https://python-poetry.org/) を使ったことない人に渡すメモ的なものを雑に書きました.
 
 ## poetry をインストール
 
@@ -71,4 +73,4 @@ published: false
 
 ## その他
 
-- pyenv: 様々な Python バージョンを利用するのに手放せないツール.
+- [pyenv](https://github.com/pyenv/pyenv): 様々な Python バージョンを利用するのに手放せないツール.
