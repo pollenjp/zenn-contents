@@ -3,7 +3,7 @@ title: "Poetry: 最初にこれだけおぼえておけば一応使えるメモ"
 emoji: "🐍"
 type: "tech"
 topics: ["poetry", "python"]
-published: false
+published: true
 ---
 
 [Poetry](https://python-poetry.org/) を使ったことない人に渡すメモ的なものを雑に書きました.
