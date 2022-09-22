@@ -152,7 +152,7 @@ TableName 用のクラスを作成する等好き勝手なコードの書き方�
 
 - pollenjp2 が先ほど作成した部屋に入ります.
 
-![Image from Gyazo](https://i.gyazo.com/ccb92cb0b435206c91a231367e355883.png)
+![Image from Gyazo](https://i.gyazo.com/fcc441e4296ec8ff07e4dce8bc47abb1.png)
 
 ### Join Room (RoomFull)
 
