@@ -23,6 +23,8 @@ IaC (Infrastructure as Code) をベースに
 staging用マシンはVagrant経由で起動し, prodに寄せたアクセスができるよう設計しました.
 prod は元々 Ansible で展開していたため, inventory ファイルを切り替えるだけで staging, prod を使い分けができるようにしています.
 
+### 構成図
+
 以下が今回作る prod, staging それぞれの構成図になります.
 どちらにもLAN内DNSサーバーを置き, ドメイン名で相互アクセスできるしています.
 
@@ -31,13 +33,23 @@ prod は元々 Ansible で展開していたため, inventory ファイルを切
 - ホストマシン: Windows 11 Pro (WSL)
   - KVM (Kernel-based Virtual Machine)
     - DNS server (BIND) x 1
-      - vm-dns
-    - k8s master node x 2
-      - vm01
-      - vm02
+      - `vm-dns.vagrant.home`
+    - k8s control-plane node x 2
+      - `vm01.vagrant.home`
+      - `vm02.vagrant.home`
     - k8s worker node x 2
-      - vm03
-      - vm04
+      - `vm03.vagrant.home`
+      - `vm04.vagrant.home`
+
+### 注意
+
+本記事の構成は control-plane node を2つに冗長化していますが, まだ以下を実装していないため不完全です.
+
+- `apiserver-advertise-address` をロードバランサーのIPに変更
+  - 現在は `vm01.vagrant.home` のIPアドレスを直接指定しています.
+- `api-server-endpoint` をロードバランサーのドメイン名に変更
+  - 現在は `k8s-cp-endpoint.vagrant.home` ドメインを `vm01.vagrant.home` と同じIPアドレスを指すようにDNSサーバー側で固定しています.
+  - これは後に容易に設定変更できるようにするための一時的な処置です.
 
 ## 基礎知識
 
