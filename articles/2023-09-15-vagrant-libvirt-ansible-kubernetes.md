@@ -26,8 +26,7 @@ prodとは筆者の自宅鯖の本番環境 (簡易版) を意味する.
 
 ### 構成図・環境
 
-以下が prod と今回作る staging それぞれの構成図になります.
-どちらにもLAN内DNSサーバーを置き, ドメイン名で相互アクセスできるようにしています.
+以下が prod と今回作る staging それぞれの構成図になります. どちらにもLAN内DNSサーバーを置き, ドメイン名で相互アクセスできるようにしています.
 
 [![Image from Gyazo](https://i.gyazo.com/495b96abeda35f468bba4355e6c0cde4.jpg)](https://gyazo.com/495b96abeda35f468bba4355e6c0cde4)
 
@@ -41,7 +40,7 @@ Local PC: Windows 11 Pro (WSL)
 | `vm03.vagrant.home` | k8s worker node | Ubuntu 22.04 |
 | `vm04.vagrant.home` | k8s worker node | Ubuntu 22.04 |
 
-### 注意: 冗長性
+#### 注意: 冗長性
 
 本記事の構成は control-plane node を2つ用意していますが, ロードバランサーを用意していないため不完全です. 理想としてはロードバランサーが control-plane を監視しておき, 一方が落ちたら他方のIP・ドメインに変更するような設定が望ましです (たぶん).
 
