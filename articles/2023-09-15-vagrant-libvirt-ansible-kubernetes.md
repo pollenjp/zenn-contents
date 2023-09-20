@@ -145,8 +145,8 @@ VM_SPEC_ARR = [
 
 #### vagrant up
 
-このまま `vagrant up` で起動できればよいのですが, 自分の環境下では一気に立ち上げようとするためメモリの割当等で度々失敗していました.
-その時に一台ずつ起動してあげれば大丈夫なはずです.
+このまま `vagrant up` で起動できればよいのですが, 自分の環境下では一気に立ち上げようとするとメモリ割当等に失敗するケースによく遭遇しました.
+そんな時は一台ずつ起動してあげれば大丈夫なはずです (時間はかかりますが...).
 
 [`Makefile`](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/ab14d17111e28c4bbd586b492812eaf920b442d2/Makefile#L105C1-L112) には以下のように記述しており, 起動時には `make vagrant-up` 等で起動するのが良いでしょう.
 
