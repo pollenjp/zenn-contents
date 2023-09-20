@@ -2,8 +2,8 @@
 title: "vagrant-libvirt と Ansible で自宅鯖prod環境に近い複数ノードKubernetes環境をローカルに作る"
 emoji: "🚢"
 type: "tech"
-topics: ["vagrant", "libvirt", "ansible", "Kubernetes"]
-published: false
+topics: ["vagrant", "libvirt", "ansible", "Kubernetes", "kvm"]
+published: true
 ---
 
 本記事は IaC (Infrastructure as Code) をベースに複数ノードの Kubernetes 環境をローカルPC内に構築することを目指します.
