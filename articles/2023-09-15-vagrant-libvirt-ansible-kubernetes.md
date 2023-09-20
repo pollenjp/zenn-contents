@@ -85,7 +85,7 @@ go run ./tools/cmd setup-vagrant-k8s
 
 ### Vagrant
 
-VagrantはVMを管理することができるツールになります.
+[Vagrant](https://www.vagrantup.com/)はVMを管理することができるツールになります.
 構成ファイル (`Vagrantfile`) に起動したいVMのスペックやOSを記述し, 裏で Virtualbox や KVM などの仮想化ソフトウェアの操作し, VMの作成・起動を行っています.
 
 Vagrantは [Vagrant Cloud](https://app.vagrantup.com) に様々なOSのBoxが公開されており, セットアップ済みのVM環境を利用することができます.
@@ -100,7 +100,7 @@ Vagrant Cloud でも libvirt 用の Box が用意されています.
 
 ### Ansible
 
-Ansible はプッシュベース型の設定管理ツールです. サーバー側で実行させたい処理を予め YAML 形式で記述 (playbook) しておき, 実行時にはコントロールクライアントからSSH経由でコマンドを逐次実行してくれます.
+[Ansible](https://www.ansible.com/) はプッシュベース型の設定管理ツールです. サーバー側で実行させたい処理を予め YAML 形式で記述 (playbook) しておき, 実行時にはコントロールクライアントからSSH経由でコマンドを逐次実行してくれます.
 Chef や Puppet といったプルベース型の設定管理ツールとは異なり, クライアント側にエージェントをインストールする必要が無くシンプルです.
 
 inventory ファイルという設定ファイルに接続先のサーバー情報や変数情報を記述しておき, その情報を元に playbook を実行することができます. prod用, staging用として異なる inventory ファイルを用意し 切り替えることで, 同じ処理 (playbook) を異なるサーバー構成に対して簡単に実行することができます.
