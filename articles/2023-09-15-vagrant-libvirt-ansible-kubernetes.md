@@ -221,16 +221,78 @@ prodでは専用のDNSサーバーを建てて名前解決をするようなこ�
 
 `playbooks/dns_server.yml` にそのための設定を書いています.
 
+[playbooks/roles/dns_server/tasks/main.yml](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/main/playbooks/roles/dns_server/tasks/main.yml)
+
 - DNSサーバー用のVMに BIND をインストール
 - 設定ファイルを編集し起動
-- 各VMのネームサーバーの向き先を `vm-dns.vagrant.home` のIPに向ける
+  - 変数としてドメインと各VMのIPアドレスとの対応などを与えておき, template として zone ファイルを形成しています.
 
-```sh
-ANSIBLE_SSH_ARGS='-F inventory/vagrant.ssh_config' \
-rye run ansible-playbook \
-  -i "inventory/vagrant.py" \
-  "playbooks/dns_server.yml"
-```
+    ```zone
+    $TTL	1d
+    @	IN	SOA	ns1 root.localhost. (
+            202309100	; Serial (size:uint32) (YYYYMMDDX: date+1桁index)
+                    60	; 1w Refresh
+                    30	; 1d Retry
+                  120	; 4w Expire
+                    30	; 1d Negative Cache TTL
+          )
+    @	IN	NS	ns1
+
+    {% for v4_conf in item.value.ipv4  %}
+    {% for name, addr in v4_conf.addresses.items()  %}
+    {{ name }}	IN	A	{{ v4_conf.network_component }}.{{ addr }}
+    {% endfor %}
+    {% endfor %}
+
+    {% for v6_conf in item.value.ipv6  %}
+    {% for name, addr in v6_conf.addresses.items()  %}
+    {{ name }}	IN	AAAA	{{ v6_conf.network_component }}{{ addr }}
+    {% endfor %}
+    {% endfor %}
+
+    {% for name, actual_name in item.value.cnames.items()  %}
+    {{ name }}	IN CNAME	{{ actual_name }}
+    {% endfor %}
+    ```
+
+    inventoryの一部
+
+    ```json
+    "network_configs": {
+      "name_server": "192.168.121.214",
+      "dns": {
+        "acl": {
+          "internal_network": [
+            "localhost",
+            "192.168.121.0/24"
+          ]
+        },
+        "domains": {
+          "vagrant.home": {
+            "ipv4": [
+              {
+                "network_component": "192.168.121",
+                "addresses": {
+                  "vm02": 124,
+                  "vm03": 142,
+                  "vm04": 132,
+                  "vm01": 29,
+                  "vm-dns": 214,
+                  "ns1": 214
+                }
+              }
+            ],
+            "ipv6": [],
+            "cnames": {
+              "k8s-cp-endpoint": "vm01"
+            }
+          }
+        }
+      }
+    }
+    ```
+
+- 各VMのネームサーバーの向き先を `vm-dns.vagrant.home` のIPに向ける
 
 ### Kubernetes のセットアップ (Ansible)
 
