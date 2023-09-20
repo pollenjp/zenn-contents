@@ -75,15 +75,13 @@ go run ./tools/cmd setup-vagrant-k8s
 
 ## 基礎知識
 
-今回は IaC (Infrastructure as Code) として全てすることも目的の一つであり, 以下のような領域で使い分けています.
+今回は IaC (Infrastructure as Code) として全てすることも目的の一つであり, 以下のような領域で使い分けています. どれも有名なツールですので既知の人は読み飛ばしてください.
 
 | Tool | 用途 | 設定ファイルフォーマット |
 |:--|:--|:--|
 | Vagrant | VMの作成・起動・停止・削除 | Ruby |
 | Ansible | 各OSのセットアップ | YAML |
 | Kubernetes | アプリケーションの展開 (本記事の範囲外) | YAML |
-
-どれも有名なツールですので既知の人は読み飛ばしてください.
 
 ### Vagrant
 
