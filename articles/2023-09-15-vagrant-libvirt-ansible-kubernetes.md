@@ -185,7 +185,7 @@ debug:
 
 今回の構成では `inventory/vagrant.py` として dynamic inventory の機能を利用しています. Vagrant で起動したマシンの IP アドレスを取得し動的に inventory を生成するためです.
 
-試行錯誤しながら雑に書いているためｋ見づこいかもしれませんが結局は以下のような設定 (JSON) を吐き出しているだけです.
+試行錯誤しながら雑に書いているため見づらいかもしれませんが単に以下のような設定 (JSON) を吐き出しているだけです.
 
 ```sh
 rye run python ./inventory/vagrant.py --list | jq
