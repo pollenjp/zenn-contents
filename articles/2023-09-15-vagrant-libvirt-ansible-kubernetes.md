@@ -437,6 +437,20 @@ or
 go run ./tools/cmd setup-vagrant-k8s
 ```
 
+### 確認
+
+```sh
+vagrant@vm02:~$ kubectl get nodes
+```
+
+```log
+NAME   STATUS   ROLES           AGE   VERSION
+vm01   Ready    control-plane   16h   v1.28.2
+vm02   Ready    control-plane   16h   v1.28.2
+vm03   Ready    <none>          16h   v1.28.2
+vm04   Ready    <none>          16h   v1.28.2
+```
+
 ### 停止・削除
 
 普通の vagrant コマンドとほぼ同じですが, 以下のコマンドで一括で停止・削除できます.
