@@ -256,6 +256,8 @@ debug-k8s-setup:  ## debug the playbook (vagrant)
 
 #### k8s-setup-control-plane.yml
 
+[playbooks/k8s-setup-control-plane.yml](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/main/playbooks/k8s-setup-control-plane.yml)
+
 inventory で `k8s_cp_master` グループに含めているものに対して処理していきます.
 
 - install kubernetes
@@ -291,7 +293,9 @@ rye run python ./inventory/vagrant.py --list | jq
 
 #### k8s-setup-join-node.yml
 
-基本的にはinventory で `k8s_other_nodes` グループに含めているものに対して処理していきます.
+[playbooks/k8s-setup-join-node.yml](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/main/playbooks/k8s-setup-join-node.yml)
+
+基本的にはinventory で `k8s_other_nodes` グループに含めているものに対して処理していきますが, 一部 `k8s_cp_master` グループ上で諸々の情報を取得しています.
 
 - k8s_other_nodes: install kubernetes
 - k8s_cp_master: `vm01.vagrant.home` で kubeadm の token, 証明書, certificate-key を作成・取得
