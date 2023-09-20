@@ -148,7 +148,7 @@ VM_SPEC_ARR = [
 このまま `vagrant up` で起動できればよいのですが, 自分の環境下では一気に立ち上げようとするためメモリの割当等で度々失敗していました.
 その時に一台ずつ起動してあげれば大丈夫なはずです.
 
-[`Makefile`](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/ba4b9c0eba116bf6d87353c57ce2436aeecfcfa4/Makefile#L105C1-L112) には以下のように記述しており, 起動時には `make vagrant-up` 等で起動するのが良いでしょう.
+[`Makefile`](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/ab14d17111e28c4bbd586b492812eaf920b442d2/Makefile#L105C1-L112) には以下のように記述しており, 起動時には `make vagrant-up` 等で起動するのが良いでしょう.
 
 ```Makefile
 .PHONY: vagrant-up
@@ -168,7 +168,7 @@ Ansible で VM にアクセスする際にはsshの設定がそのまま使わ�
 
 環境変数[ANSIBLE_SSH_ARG](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/ssh_connection.html#parameter-ssh_args) を利用して ssh のオプションを渡すことができるため, 以下のように実行することで見た目上, たとえば `vm01.vagrant.home` のドメインにアクセスしているように扱うことができます.
 
-[Makefile](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/ba4b9c0eba116bf6d87353c57ce2436aeecfcfa4/Makefile#L91-L98)
+[Makefile](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/ab14d17111e28c4bbd586b492812eaf920b442d2/Makefile#L91-L98)
 
 ```Makefile
 .PHONY: debug
@@ -238,7 +238,7 @@ Kubernetes の構築は [kubeadm](https://kubernetes.io/docs/reference/setup-too
 
 必要な操作が `kubeadm init` と `kubeadm join` で異なるので別の playbook に分けています.
 
-[Makefile](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/ba4b9c0eba116bf6d87353c57ce2436aeecfcfa4/Makefile#L73-L89)
+[Makefile](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/ab14d17111e28c4bbd586b492812eaf920b442d2/Makefile#L73-L89)
 
 ```Makefile
 .PHONY: debug-k8s-setup
@@ -256,16 +256,48 @@ debug-k8s-setup:  ## debug the playbook (vagrant)
 
 #### k8s-setup-control-plane.yml
 
-[playbooks/k8s-setup-control-plane.yml](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/main/playbooks/k8s-setup-control-plane.yml)
+- [playbooks/k8s-setup-control-plane.yml](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/main/playbooks/k8s-setup-control-plane.yml)
+- [playbooks/roles/k8s-control-plane/tasks/main.yml](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/main/playbooks/roles/k8s-control-plane/tasks/main.yml)
 
 inventory で `k8s_cp_master` グループに含めているものに対して処理していきます.
 
 - install kubernetes
 - kubeadm init
+  - [kubeadm init](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/ab14d17111e28c4bbd586b492812eaf920b442d2/playbooks/roles/k8s-control-plane/tasks/main.yml#L49-L55)
+
+    ```yaml
+    ---
+    apiVersion: kubeadm.k8s.io/v1beta3
+    kind: InitConfiguration
+    localAPIEndpoint:
+        advertiseAddress: "{{ k8s_apiserver_advertise_address }}"
+        bindPort: 6443
+    ---
+    apiVersion: kubeadm.k8s.io/v1beta3
+    kind: ClusterConfiguration
+    networking:
+        serviceSubnet: "10.96.0.0/16" # default
+        # --pod-network-cidr=10.244.0.0/16 is required by flannel
+        podSubnet: "10.244.0.0/16"
+        dnsDomain: "cluster.local" # default
+    controlPlaneEndpoint: "{{ k8s_cp_endpoint }}:6443"
+    ```
+
+  - [kubeadm_config.yaml](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/ab14d17111e28c4bbd586b492812eaf920b442d2/playbooks/roles/k8s-control-plane/tasks/main.yml#L49-L56)
+
+    ```yaml
+    - name: Initialize kubeadm
+      ansible.builtin.command:
+        cmd: >-
+          kubeadm init
+            --skip-token-print
+            --config /tmp/kubeadm_config.yaml
+    ```
+
 - その他のインストール
   - [flannel](https://github.com/flannel-io/flannel)
     - deploy時の設定をGit管理する意味も含めてmanifestは `flannel-config.yml` に保存しています.
-    - [playbook](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/ba4b9c0eba116bf6d87353c57ce2436aeecfcfa4/playbooks/roles/k8s-control-plane/tasks/main.yml#L93-L108)
+    - [playbook](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/ab14d17111e28c4bbd586b492812eaf920b442d2/playbooks/roles/k8s-control-plane/tasks/main.yml#L93-L108)
   - [helm](https://github.com/helm/helm)
 
 今回は `vm01.vagrant.home` を最初の control-plane とするため, inventory で `k8s_cp_master` グループに指定しています.
@@ -347,7 +379,7 @@ go run ./tools/cmd setup-vagrant-k8s
 
 普通の vagrant コマンドとほぼ同じですが, 以下のコマンドで一括で停止・削除できます.
 
-[Makefile](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/ba4b9c0eba116bf6d87353c57ce2436aeecfcfa4/Makefile#L114-L121)
+[Makefile](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/ab14d17111e28c4bbd586b492812eaf920b442d2/Makefile#L114-L121)
 
 停止だけ
 
@@ -376,6 +408,7 @@ vagrant-destroy:  ##
 ## おわりに
 
 今回, 自分としてはとりあえずで動くものを作れたので満足です.
+同じく簡易staging環境を作りたいという方の参考になれば幸いです.
 ただ, まだ以下の問題が残っているので余力があるときに追加・改善したいと思います.
 
 - ロードバランサーの追加
