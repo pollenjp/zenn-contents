@@ -88,18 +88,14 @@ go run ./tools/cmd setup-vagrant-k8s
 ### Vagrant
 
 VagrantはVMを管理することができるツールになります.
-構成ファイル (`Vagrantfile`) に起動したいVMのスペックやOSを記述し,
-裏で Virtualbox や KVM などの仮想化ソフトウェアの操作し, VMの作成・起動を行っています.
+構成ファイル (`Vagrantfile`) に起動したいVMのスペックやOSを記述し, 裏で Virtualbox や KVM などの仮想化ソフトウェアの操作し, VMの作成・起動を行っています.
 
-Vagrantは [Vagrant Cloud](https://app.vagrantup.com) に様々なOSのBoxが公開されており,
-セットアップ済みのVM環境を利用することができます.
-`vagrant` ユーザー作成やssh等も予め設定されているため
-頻繁にVMを作成・削除する際に向いています.
+Vagrantは [Vagrant Cloud](https://app.vagrantup.com) に様々なOSのBoxが公開されており, セットアップ済みのVM環境を利用することができます.
+`vagrant` ユーザー作成やssh等も予め設定されているため頻繁にVMを作成・削除する際に向いています.
 
 ### vagrant-libvirt
 
-Vagrantの仮想化ソフトウェアとしてデフォルトでは VirtualBox が想定されていますが,
-[vagrant-libvirt](https://github.com/vagrant-libvirt/vagrant-libvirt) というプラグインを用いることで KVM (libvirt) を利用することができます.
+Vagrantの仮想化ソフトウェアとしてデフォルトでは VirtualBox が想定されていますが, [vagrant-libvirt](https://github.com/vagrant-libvirt/vagrant-libvirt) というプラグインを用いることで KVM (libvirt) を利用することができます.
 Vagrant Cloud でも libvirt 用の Box が用意されています.
 
 今回は自分の好みや手元で VirtualBox と Hyper-V の共存が難しい等の理由もあって KVM を利用しています.
