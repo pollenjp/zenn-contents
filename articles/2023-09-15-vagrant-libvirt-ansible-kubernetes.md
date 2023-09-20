@@ -6,7 +6,7 @@ topics: ["vagrant", "libvirt", "ansible", "Kubernetes", "kvm"]
 published: true
 ---
 
-本記事は IaC (Infrastructure as Code) をベースに複数ノードの Kubernetes 環境をローカルPC内に構築することを目指します.
+本記事は IaC (Infrastructure as Code) をベースに複数ノードの Kubernetes 環境をローカルPC内に構築することを目指します. 簡易staging環境を求めている人や, Kubernetes のクラスタ構築をやってみたいという方の参考になれば幸いです.
 
 ## きっかけ
 
