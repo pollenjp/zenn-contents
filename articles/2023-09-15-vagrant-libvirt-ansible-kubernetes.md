@@ -56,6 +56,10 @@ Local PC: Windows 11 Pro (WSL)
   - 現在は `k8s-cp-endpoint.vagrant.home` ドメインを `vm01.vagrant.home` と同じIPアドレスを指すようにDNSサーバー側で固定しています.
   - これはロードバランサーを用意するまでの一時的な処置です.
 
+:::message
+近いうちにロードバランサーを追加する予定ではあるのでその時は追記します.
+:::
+
 ### コード
 
 <https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes>
