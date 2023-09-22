@@ -33,7 +33,7 @@ prodとは筆者の自宅鯖の本番環境 (簡易版) を意味する.
 
 以下が prod と今回作る staging それぞれの構成図になります. どちらにもLAN内DNSサーバーを置き, ドメイン名で相互アクセスできるようにしています.
 
-[![Image from Gyazo](https://i.gyazo.com/495b96abeda35f468bba4355e6c0cde4.jpg)](https://gyazo.com/495b96abeda35f468bba4355e6c0cde4)
+![Image from Gyazo](https://i.gyazo.com/495b96abeda35f468bba4355e6c0cde4.jpg)
 
 Local PC: Windows 11 Pro (WSL)
 
@@ -123,7 +123,7 @@ ryeはパッケージ管理だけではなく, 任意のPythonバージョンの
 
 冒頭と同じ図を以下に持ってきました.
 
-[![Image from Gyazo](https://i.gyazo.com/495b96abeda35f468bba4355e6c0cde4.jpg)](https://gyazo.com/495b96abeda35f468bba4355e6c0cde4)
+![Image from Gyazo](https://i.gyazo.com/495b96abeda35f468bba4355e6c0cde4.jpg)
 
 全体の流れは以下のようになります.
 
