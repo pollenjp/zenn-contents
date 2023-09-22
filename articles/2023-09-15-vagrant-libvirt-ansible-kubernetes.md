@@ -17,12 +17,17 @@ published: true
 
 Vagrant, KVM, Ansible を用いて複数ノード・複数control-plane構成の Kubernetes 環境をstaging用に構築します.
 
-staging用VMはVagrant経由で起動し, prodに寄せたアクセスができるよう設計しました.
-prod は元々 Ansible で展開していたため, inventory ファイルを切り替えるだけで staging, prod を使い分けができるようにしています.
+staging用VMはVagrant経由で起動し, prodに寄せたアクセスができるよう設計しました. prod は元々 Ansible で展開していたため, inventory ファイルを切り替えるだけで staging, prod を使い分けができるようにしています.
 
 :::message
 prodとは筆者の自宅鯖の本番環境 (簡易版) を意味する.
 :::
+
+この記事で肝となるのは**DNSサーバーを用いることでIPアドレスを手動で渡す、または利用する必要が一切無い**ことです. 仕組みは以下に示す通りです.
+
+- Vagrant が自動でIPアドレスを付与
+- Ansible の dynamic inventory (後述) でIPアドレスを取得し, ドメイン名との対応を保存
+- DNSサーバーに登録することで, ドメイン名をベースとしたアクセスが可能
 
 ### 構成図・環境
 
