@@ -231,6 +231,7 @@ prodでは専用のDNSサーバーを建てて名前解決をするようなこ�
 - DNSサーバー用のVMに BIND をインストール
 - 設定ファイルを編集し起動
   - 変数としてドメインと各VMのIPアドレスとの対応などを与えておき, template として zone ファイルを形成しています.
+    [playbooks/roles/dns_server/templates/etc/bind/etc/bind/template.zone](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/489fd274ea6b8e163174f62e18ea26068478a854/playbooks/roles/dns_server/templates/etc/bind/etc/bind/template.zone)
 
     ```zone
     $TTL	1d
@@ -238,7 +239,7 @@ prodでは専用のDNSサーバーを建てて名前解決をするようなこ�
             202309100	; Serial (size:uint32) (YYYYMMDDX: date+1桁index)
                     60	; 1w Refresh
                     30	; 1d Retry
-                  120	; 4w Expire
+                   120	; 4w Expire
                     30	; 1d Negative Cache TTL
           )
     @	IN	NS	ns1
