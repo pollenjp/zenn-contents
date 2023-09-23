@@ -47,16 +47,15 @@ Local PC: Windows 11 Pro (WSL)
 
 #### 注意: 冗長性
 
-本記事の構成は control-plane node を2つ用意していますが, ロードバランサーを用意していないため不完全です. 理想としてはロードバランサーが control-plane を監視しておき, 一方が落ちたら他方のIP・ドメインに変更するような設定が望ましいです (たぶん).
+本記事の構成は control-plane node を2つ用意していますが, ロードバランサーを用意していないため不完全です.
 
-- `apiserver-advertise-address`
-  - 現在は `vm01.vagrant.home` と同じIPアドレスを直接指定してしまっています.
-  - 本来はロードバランサーのIPアドレスを指定するようにすると良いです.
 - `control-plane-endpoint`
   - 現在は `k8s-cp-endpoint.vagrant.home` ドメインを `vm01.vagrant.home` と同じIPアドレスを指すようにDNSサーバー側で固定しています.
   - これはロードバランサーを用意するまでの一時的な処置です.
 
 :::message
+2023/09/23 `apiserver-advertise-address` に関する誤った情報かつ不要な記述をしていたため削除しました.
+
 近いうちにロードバランサーを追加する予定ではあるのでその時は追記します.
 :::
 
