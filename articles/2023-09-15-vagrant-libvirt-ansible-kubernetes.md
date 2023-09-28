@@ -8,6 +8,11 @@ published: true
 
 本記事は IaC (Infrastructure as Code) をベースに複数ノードの Kubernetes 環境をローカルPC内に構築することを目指します. 簡易staging環境を求めている人や, Kubernetes のクラスタ構築をやってみたいという方の参考になれば幸いです.
 
+**2023/09/28 編集**
+
+- [kubeadm の HA 要件](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/high-availability/)より Control-Plane x3, Worker Node x2 構成に変更
+- Load Balancer の追加
+
 ## きっかけ
 
 学習も兼ねて実際に自宅鯖で k8s を動かしていると, ノードの追加・削除やバージョン・構成変更時等によく壊れます (個人談). 壊れると環境を戻すのが非常に面倒なので, いろんな実験を躊躇うケースがありました.
@@ -33,35 +38,27 @@ prodとは筆者の自宅鯖の本番環境 (簡易版) を意味する.
 
 以下が prod と今回作る staging それぞれの構成図になります. どちらにもLAN内DNSサーバーを置き, ドメイン名で相互アクセスできるようにしています.
 
-![Image from Gyazo](https://i.gyazo.com/495b96abeda35f468bba4355e6c0cde4.jpg)
+![Image from Gyazo](https://i.gyazo.com/7c22ce2c0545e7f3b771d4da269e69ab.jpg)
 
 Local PC: Windows 11 Pro (WSL)
 
 | 名称 | 役割 | OS |
 |:--|:--|:--|
-| `vm-dns.vagrant.home` | DNS server | Ubuntu 22.04 |
+| `vm-dns.vagrant.home` | DNS server / Load Balancer | Ubuntu 22.04 |
 | `vm01.vagrant.home` | k8s control-plane node | Ubuntu 22.04 |
 | `vm02.vagrant.home` | k8s control-plane node | Ubuntu 22.04 |
-| `vm03.vagrant.home` | k8s worker node | Ubuntu 22.04 |
+| `vm03.vagrant.home` | k8s control-plane node | Ubuntu 22.04 |
 | `vm04.vagrant.home` | k8s worker node | Ubuntu 22.04 |
+| `vm05.vagrant.home` | k8s worker node | Ubuntu 22.04 |
 
 #### 注意: 冗長性
 
-本記事の構成は control-plane node を2つ用意していますが, ロードバランサーを用意していないため不完全です.
-
-- `control-plane-endpoint`
-  - 現在は `k8s-cp-endpoint.vagrant.home` ドメインを `vm01.vagrant.home` と同じIPアドレスを指すようにDNSサーバー側で固定しています.
-  - これはロードバランサーを用意するまでの一時的な処置です.
-
-:::message
-2023/09/23 `apiserver-advertise-address` に関する誤った情報かつ不要な記述をしていたため削除しました.
-
-近いうちにロードバランサーを追加する予定ではあるのでその時は追記します.
-:::
+~~本記事の構成は control-plane node を2つ用意していますが, ロードバランサーを用意していないため不完全です.~~
+Load Balancer を追加したため, 1台Control-Plane に対しては冗長性を持っています.
 
 ### コード
 
-<https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes>
+<https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/tree/v2023.9.28>
 
 上記のリポジトリに本記事用に対応したコードを載せています.
 各アプリケーションを用意したあとに以下のコマンドで一発で構築できます.
@@ -148,6 +145,7 @@ VM_SPEC_ARR = [
   VmSpecData.new('vm02.vagrant.home', 2, 4096, VAGRANT_BOX, 'libvirt', 'cp02 node'),
   VmSpecData.new('vm03.vagrant.home', 2, 2048, VAGRANT_BOX, 'libvirt', 'worker01 node'),
   VmSpecData.new('vm04.vagrant.home', 2, 2048, VAGRANT_BOX, 'libvirt', 'worker02 node')
+  VmSpecData.new('vm05.vagrant.home', 2, 2048, VAGRANT_BOX, 'libvirt', 'worker02 node')
 ].freeze
 ```
 
@@ -156,7 +154,7 @@ VM_SPEC_ARR = [
 このまま `vagrant up` で起動できればよいのですが, 自分の環境下では一気に立ち上げようとするとメモリ割当等に失敗するケースによく遭遇しました.
 そんな時は一台ずつ起動してあげれば大丈夫なはずです (時間はかかりますが...).
 
-[`Makefile`](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/ab14d17111e28c4bbd586b492812eaf920b442d2/Makefile#L105C1-L112) には以下のように記述しており, 起動時には `make vagrant-up` 等で起動するのが良いでしょう.
+[`Makefile`](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/v2023.9.28/Makefile#L105-L113) には以下のように記述しており, 起動時には `make vagrant-up` 等で起動するのが良いでしょう.
 
 ```Makefile
 .PHONY: vagrant-up
@@ -167,6 +165,7 @@ vagrant-up:  ##
         vagrant up vm02.vagrant.home
         vagrant up vm03.vagrant.home
         vagrant up vm04.vagrant.home
+        vagrant up vm05.vagrant.home
 ```
 
 #### vgrant ssh-config
@@ -176,7 +175,7 @@ Ansible で VM にアクセスする際にはsshの設定がそのまま使わ�
 
 環境変数[ANSIBLE_SSH_ARG](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/ssh_connection.html#parameter-ssh_args) を利用して ssh のオプションを渡すことができるため, 以下のように実行することで見た目上, たとえば `vm01.vagrant.home` のドメインにアクセスしているように扱うことができます.
 
-[Makefile](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/ab14d17111e28c4bbd586b492812eaf920b442d2/Makefile#L91-L98)
+[Makefile](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/v2023.9.28/Makefile#L91-L98)
 
 ```Makefile
 .PHONY: debug
@@ -215,6 +214,7 @@ rye run python ./inventory/vagrant.py --list | jq
       "vm02.vagrant.home",
       "vm03.vagrant.home",
       "vm04.vagrant.home"
+      "vm05.vagrant.home"
     ],
     "children": []
   },
@@ -229,14 +229,14 @@ prodでは専用のDNSサーバーを建てて名前解決をするようなこ�
 
 `playbooks/dns_server.yml` にそのための設定を書いています.
 
-[playbooks/roles/dns_server/tasks/main.yml](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/main/playbooks/roles/dns_server/tasks/main.yml)
+[playbooks/roles/dns_server/tasks/main.yml](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/v2023.9.28/playbooks/roles/dns_server/tasks/main.yml)
 
 - DNSサーバー用のVMに BIND をインストール
 - 設定ファイルを編集し起動
   - 変数としてドメインと各VMのIPアドレスとの対応などを与えておき, template として zone ファイルを形成しています.
-    [playbooks/roles/dns_server/templates/etc/bind/etc/bind/template.zone](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/489fd274ea6b8e163174f62e18ea26068478a854/playbooks/roles/dns_server/templates/etc/bind/etc/bind/template.zone)
+    [playbooks/roles/dns_server/templates/etc/bind/etc/bind/template.zone](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/v2023.9.28/playbooks/roles/dns_server/templates/etc/bind/etc/bind/template.zone.j2)
 
-    ```zone
+    ```jinja2
     $TTL	1d
     @	IN	SOA	ns1 root.localhost. (
             202309100	; Serial (size:uint32) (YYYYMMDDX: date+1桁index)
@@ -264,7 +264,7 @@ prodでは専用のDNSサーバーを建てて名前解決をするようなこ�
     {% endfor %}
     ```
 
-    inventoryの一部
+    inventoryの一部 (例)
 
     ```json
     "network_configs": {
@@ -285,6 +285,7 @@ prodでは専用のDNSサーバーを建てて名前解決をするようなこ�
                   "vm02": 124,
                   "vm03": 142,
                   "vm04": 132,
+                  "vm05": 121,
                   "vm01": 29,
                   "vm-dns": 214,
                   "ns1": 214
@@ -293,7 +294,7 @@ prodでは専用のDNSサーバーを建てて名前解決をするようなこ�
             ],
             "ipv6": [],
             "cnames": {
-              "k8s-cp-endpoint": "vm01"
+              "k8s-cp-endpoint": "vm-dns"
             }
           }
         }
@@ -327,22 +328,23 @@ debug-k8s-setup:  ## debug the playbook (vagrant)
 
 #### k8s-setup-control-plane.yml
 
-- [playbooks/k8s-setup-control-plane.yml](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/main/playbooks/k8s-setup-control-plane.yml)
-- [playbooks/roles/k8s-control-plane/tasks/main.yml](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/main/playbooks/roles/k8s-control-plane/tasks/main.yml)
+- [playbooks/k8s-setup-control-plane.yml](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/v2023.9.28/playbooks/k8s-setup-control-plane.yml)
+- [playbooks/roles/k8s_kubeadm_init/tasks/main.yml](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/v2023.9.28/playbooks/roles/k8s_kubeadm_init/tasks/main.yml)
 
 inventory で `k8s_cp_master` グループに含めているものに対して処理していきます.
 
 - install kubernetes
 - kubeadm init
-  - [kubeadm init](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/ab14d17111e28c4bbd586b492812eaf920b442d2/playbooks/roles/k8s-control-plane/tasks/main.yml#L49-L55)
+  - [kubeadm_config.yaml](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/v2023.9.28/playbooks/roles/k8s_kubeadm_init/templates/tmp/kubeadm_config.yaml)
 
     ```yaml
     ---
+    # <https://kubernetes.io/docs/reference/config-api/kubeadm-config.v1beta3/>
     apiVersion: kubeadm.k8s.io/v1beta3
     kind: InitConfiguration
     localAPIEndpoint:
-        advertiseAddress: "{{ k8s_apiserver_advertise_address }}"
-        bindPort: 6443
+        advertiseAddress: "{{ k8s_kubeadm_init_role__local_api_endpoint__advertise_address }}"
+        bindPort: {{ k8s_kubeadm_init_role__local_api_endpoint__bind_port }}
     ---
     apiVersion: kubeadm.k8s.io/v1beta3
     kind: ClusterConfiguration
@@ -351,10 +353,10 @@ inventory で `k8s_cp_master` グループに含めているものに対して�
         # --pod-network-cidr=10.244.0.0/16 is required by flannel
         podSubnet: "10.244.0.0/16"
         dnsDomain: "cluster.local" # default
-    controlPlaneEndpoint: "{{ k8s_cp_endpoint }}:6443"
+    controlPlaneEndpoint: "{{ k8s_kubeadm_init_role__control_plane_endpoint__address }}:{{ k8s_kubeadm_init_role__control_plane_endpoint__port }}"
     ```
 
-  - [kubeadm_config.yaml](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/ab14d17111e28c4bbd586b492812eaf920b442d2/playbooks/roles/k8s-control-plane/tasks/main.yml#L49-L56)
+  - [kubeadm init](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/v2023.9.28/playbooks/roles/k8s_kubeadm_init/tasks/main.yml#L59-L65)
 
     ```yaml
     - name: Initialize kubeadm
@@ -417,15 +419,10 @@ rye run python ./inventory/vagrant.py --list | jq
     "hostvars": {
       "vm-dns.vagrant.home": {},
       "vm01.vagrant.home": {},
-      "vm02.vagrant.home": {
-        "k8s_is_control_plane": true
-      },
-      "vm03.vagrant.home": {
-        "k8s_is_control_plane": false
-      },
-      "vm04.vagrant.home": {
-        "k8s_is_control_plane": false
-      }
+      "vm02.vagrant.home": { "k8s_is_control_plane": true },
+      "vm03.vagrant.home": { "k8s_is_control_plane": true },
+      "vm04.vagrant.home": { "k8s_is_control_plane": false },
+      "vm05.vagrant.home": { "k8s_is_control_plane": false }
     }
   }
 }
@@ -454,10 +451,11 @@ vagrant@vm02:~$ kubectl get nodes
 
 ```log
 NAME   STATUS   ROLES           AGE   VERSION
-vm01   Ready    control-plane   16h   v1.28.2
-vm02   Ready    control-plane   16h   v1.28.2
-vm03   Ready    <none>          16h   v1.28.2
-vm04   Ready    <none>          16h   v1.28.2
+vm01   Ready    control-plane   43m   v1.28.2
+vm02   Ready    control-plane   21m   v1.28.2
+vm03   Ready    control-plane   20m   v1.28.2
+vm04   Ready    <none>          20m   v1.28.2
+vm05   Ready    <none>          20m   v1.28.2
 ```
 
 ### 停止・削除
