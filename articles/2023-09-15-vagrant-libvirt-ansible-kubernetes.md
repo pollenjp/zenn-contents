@@ -304,6 +304,69 @@ prodでは専用のDNSサーバーを建てて名前解決をするようなこ�
 
 - 各VMのネームサーバーの向き先を `vm-dns.vagrant.home` のIPに向ける
 
+### Load Balancer (Nginx)
+
+- [playbooks/roles/k8s_cp_load_balancer/tasks/main.yml](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/v2023.9.28/playbooks/roles/k8s_cp_load_balancer/tasks/main.yml)
+  - task
+- [playbooks/roles/k8s_cp_load_balancer/templates/HOME/workdir/deployments/k8s-cp-load-balancer/docker-compose.yml](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/main/playbooks/roles/k8s_cp_load_balancer/templates/HOME/workdir/deployments/k8s-cp-load-balancer/docker-compose.yml)
+  - nginx を docker-compose で起動します.
+
+  ```yaml
+  services:
+    nginx:
+      image: nginx:latest
+      volumes:
+        - ./nginx.conf:/etc/nginx/nginx.conf
+        - nginx_data:/var/log/nginx
+        - /etc/kubernetes/pki:/etc/kubernetes/pki
+      ports:
+        - "{{ k8s_cp_load_balancer_role__nginx_conf__server_listen_port }}:{{ k8s_cp_load_balancer_role__nginx_conf__server_listen_port }}"
+      restart: always
+  volumes:
+    nginx_data:
+      driver: local
+  ```
+
+- [playbooks/roles/k8s_cp_load_balancer/templates/HOME/workdir/deployments/k8s-cp-load-balancer/nginx.conf](https://github.com/pollenjp/sample-vagrant-libvirt-ansible-kubernetes/blob/main/playbooks/roles/k8s_cp_load_balancer/templates/HOME/workdir/deployments/k8s-cp-load-balancer/nginx.conf)
+  - [nginx の L4LB (L4 Load Balancer) 機能](https://docs.nginx.com/nginx/admin-guide/load-balancer/tcp-udp-load-balancer/)を使って書く Control Plane に分配しています.
+
+  ```jinja2
+  #
+  # jinja template with special start and end string
+  #
+
+  user nginx;
+  worker_processes auto;
+
+  error_log /var/log/nginx/error.log notice;
+  pid /var/run/nginx.pid;
+
+
+  events {
+      # worker_connections 1024;
+      worker_connections 8196;
+  }
+
+
+  stream {
+
+      upstream stream_backend {
+          #{% for upstream in k8s_cp_load_balancer_role__nginx_conf__upstream_list %}#
+          #{{ upstream }}#
+          #{% endfor %}#
+      }
+
+      server {
+          listen #{{ k8s_cp_load_balancer_role__nginx_conf__server_listen_port }}#;
+          proxy_pass stream_backend;
+
+          # tls
+
+      }
+
+  }
+  ```
+
 ### Kubernetes のセットアップ (Ansible)
 
 Kubernetes の構築は [kubeadm](https://kubernetes.io/docs/reference/setup-tools/kubeadm/) を利用して行います.
