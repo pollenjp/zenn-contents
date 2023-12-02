@@ -42,7 +42,7 @@ Ansible では様々な場面で変数の定義または代入が行われます
 
 実際にこのパターンは頻繁に踏むわけではありませんが, 例えば次のようなケースを考えられます.
 
-以下のような inventory, role, playbook file 構成で `ansible-playbook` を実行した場合, 変数 `var__overwrite` の値を追ってみます.
+以下のような inventory, role, playbook file 構成で `ansible-playbook` を実行した場合の変数 `var__overwrite` の値を追ってみます.
 
 ```sh
 ansible-playbook -i inventory/debug.yml playbooks/debug.yml
