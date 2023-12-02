@@ -3,7 +3,7 @@ title: "ansible-lint のカスタムルールを利用して Ansible 内での�
 emoji: "🚢"
 type: "tech"
 topics: ["ansible-lint", "ansible"]
-published: publish
+published: true
 ---
 
 ## まえがき
