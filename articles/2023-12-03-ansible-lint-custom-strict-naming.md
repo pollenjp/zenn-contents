@@ -248,3 +248,4 @@ playbooks/roles/sample/tasks/sample.yml:2 Task/Handler: Overwrite parent playboo
 - [ansible-lint-custom-strict-naming · PyPI](https://pypi.org/project/ansible-lint-custom-strict-naming/) について
   - 本記事で紹介したルールを実装したパッケージです
   - パッケージの開発は雰囲気でやっており, 試行錯誤段階にあるため, そのまま利用される場合は package バージョンを固定することをお勧めします.
+- なお, Ansible は様々な使われ方ができるため, お使いのプロジェクトに合わせて適切なルールを利用することをお勧めします.
