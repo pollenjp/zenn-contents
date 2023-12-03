@@ -1,5 +1,5 @@
 ---
-title: "ansible-lint のカスタムルールを利用して Ansible 内での変数命名規則を縛ってみた"
+title: "ansible-lint のカスタムルールを利用して Ansible 内での変数命名規則を縛ってみた話"
 emoji: "🚢"
 type: "tech"
 topics: ["ansiblelint", "ansible"]
@@ -151,7 +151,7 @@ all:
     sample_var2: "var2"
 ```
 
-しかし, このルールは弱めに設定されています. role が **受け取る変数** (playbook 側から渡す変数) にしか制約が働かない点です.
+しかし, このルールはかなり弱めに設定されています. role が **受け取る変数** (playbook 側から渡す変数) にしか制約が働かないからです.
 「問題点 2」で発生した問題は role 内で `ansible.builtin.set_fact` を使って変数を上書きしてしまうことでしたが, このルールでは明示的に変数を渡しているわけではないため検知でません.
 
 また, `ansible.builtin.include_role` だけでなく `ansible.builtin.include_tasks` も外部の tasks を取り込んでいるため同様のルールを適応したいところです.
