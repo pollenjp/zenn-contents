@@ -40,9 +40,9 @@ Ansible では様々な場面で変数の定義または代入が行われます
 
 ### 問題点 2: 変数を予期せず上書きしてしまうケース
 
-実際にこのパターンは頻繁に踏むわけではありませんが, 例えば次のようなケースを考えられます.
+実際にこのパターンは頻繁に踏むわけではありませんが, 例えば次のようなケースが考えられます.
 
-以下のような inventory, role, playbook file 構成で `ansible-playbook` を実行した場合の変数 `var__overwrite` の値を追ってみます.
+以下のような inventory, role, playbook file 構成で `ansible-playbook` を実行した場合, 変数 `var__overwrite` がどのように変化するのかを追ってみます.
 
 ```sh
 ansible-playbook -i inventory/debug.yml playbooks/debug.yml
@@ -116,7 +116,7 @@ all:
 ```
 
 上記の `playbooks/debug.yml` のコメントに記載していますが, `var__overwrite` の値は `ansible.builtin.include_role` で呼び出した role 内で上書きされています.
-これが意図した動作であれば問題ありませんが, そうでない場合, 値が予期せず変更されたことに気づかず以降の task を実行しかねません.
+これが意図した動作であれば問題ありませんが, もしかすると `sample` role は role 内だけで利用する変数を定義したかっただけかもしれません. そのような場合, 値が予期せず変更され, そのまま次の task が実行されてしまいます.
 
 ## 命名規則で改善
 
