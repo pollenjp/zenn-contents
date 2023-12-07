@@ -20,15 +20,17 @@ published: true
 
 自分用に作った命名規則を [ansible-lint-custom-strict-naming · PyPI](https://pypi.org/project/ansible-lint-custom-strict-naming/) パッケージに落とし込んで利用しているので, もし同じ Ansible の悩みを抱えている方がいたら参考にしてみてください.
 
-## Ansible の変数スコープが分からなくなる
+## Ansible の変数スコープや優先順位が分からなくなる
 
-Ansible では様々な場面で変数の定義または代入が行われます. 例えば,
+Ansible では様々な場面で変数の定義または代入を行うことができます [^ansible_vars_precedence]. 例えば,
 
 - inventory ファイルの `vars` セクションで定義して事前に渡す変数
 - `ansible.builtin.set_fact` で定義した変数または書き換えた変数
 - task の `register` で定義された変数
 
-等です. しかしながら, これらによって定義される変数にはグローバルなスコープに定義しているようなものであり, 外部のタスクやロールに閉じていません. そのため, 任意の場所からアクセスができ, 値の書き換えが可能になっています. これらによる問題点をいくつか挙げてみます.
+等です. しかしながら, これらによって定義される変数 Ansible 独特なルール [^ansible_vars_precedence] に則っています. 時にはグローバルな値を定義してるものもあれば, スコープ内だけに閉じているものもあり, 書き換えているように見えても実は優先度の高いほかの値によって固定化されているもの等様々です. 次にこれらよる問題点をいくつか挙げてみます.
+
+[^ansible_vars_precedence]: <https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#defining-variables-at-runtime>
 
 ※ 追記: task の `vars` 等で指定した変数についてはその中に閉じているため, 誤解を避けるため記事のセクション名を修正しました.
 
