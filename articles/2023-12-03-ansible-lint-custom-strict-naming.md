@@ -9,7 +9,7 @@ published: true
 ## まえがき
 
 みなさんこんにちは! KMCID: pollenjp です.
-本記事は [KMC Advent Calendar 2023](https://adventar.org/calendars/8840) の 3 日目の記事です.
+本記事は [KMC Advent Calendar 2023](https://adventar.org/calendars/8840) の 3 日目の記事と [Ansible Advent Calendar 2023]() です.
 
 昨日の記事は taisei さんによる [Jsoo でスイカゲームもどき | A watermelon game on browser implemented in ocaml](https://taiseikmc.github.io/watermelon-game-jsoo/blog/index.html) でした.
 元のスイカゲームは動画などでしか見たことはなかったのですが, **スイカゲームもどき**を触ってみて絶妙なゲームバランスに納得し楽しめました.
@@ -28,17 +28,17 @@ Ansible では様々な場面で変数の定義または代入を行うことが
 - `ansible.builtin.set_fact` で定義した変数または書き換えた変数
 - task の `register` で定義された変数
 
-等です. しかしながら, これらによって定義される変数 Ansible 独特なルール [^ansible_vars_precedence] に則っています. 時にはグローバルな値を定義してるものもあれば, スコープ内だけに閉じているものもあり, 書き換えているように見えても実は優先度の高いほかの値によって固定化されているもの等様々です. 次にこれらよる問題点をいくつか挙げてみます.
+等です. しかしながら, これらによって定義される変数は Ansible の独特な優先度 [^ansible_vars_precedence] に則っています. グローバルのような変数を定義してるものもあれば, スコープ内だけに閉じているものもあり, また書き換えているように見えて実は優先度の高いほかの値によって上書きされるもの等です. 次にこれらよる問題点をいくつか挙げてみます.
 
 [^ansible_vars_precedence]: <https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#defining-variables-at-runtime>
 
-※ 追記: task の `vars` 等で指定した変数についてはその中に閉じているため, 誤解を避けるため記事のセクション名を修正しました.
+※ 追記: 例えば task の `vars` 等で指定した変数については task 内に閉じているため, 誤解を避けるため記事のセクション名を修正しました.
 
 ### 問題点 1: チーム内で変数の定義・利用場所の把握が難しい
 
-現状, Ansible の [Language Server](https://github.com/ansible/ansible-language-server) では**変数の定義ジャンプ**等はまだサポートされていないため, 変数がどこで定義されたのかが非常にわかりにくくなっています.
+現状, Ansible の [Language Server](https://github.com/ansible/ansible-language-server) では**変数の定義ジャンプ**等はまだサポートされていないため, 変数の定義場所がわかりやすいとは言いにくいです.
 
-一人だけで管理するプロジェクトであればまだしも, チームで管理するプロジェクトにおいて, ルール無く利用された変数を把握することは非常に困難でありバグの温床にもなります.
+また, 一人だけで管理するプロジェクトであればまだしも, チームで管理するプロジェクトにおいて, ルール無く扱われる変数を把握することは困難でありバグの温床になります.
 
 ### 問題点 2: 変数を予期せず上書きしてしまうケース
 
@@ -136,7 +136,7 @@ all:
 
 ### role 名, tasks 名を prefix に含める
 
-まず, 「問題点 2: 変数を予期せず上書きしてしまうケース」 については, 変数名の prefix に変数のスコープに role や tasks 名を含めることで改善します.
+まず, 「問題点 2: 変数を予期せず上書きしてしまうケース」 については, 変数名の prefix に変数の role や tasks 名を含めることで改善します.
 
 そしてこの考えは ansible-lint の [`var-naming[no-role-prefix]`](https://ansible.readthedocs.io/projects/lint/rules/var-naming/) ルールに**一部**含まれています.
 
@@ -244,7 +244,7 @@ playbooks/roles/sample/tasks/sample.yml:2 Task/Handler: Overwrite parent playboo
 
 ## 最後に
 
-- 明日 4 日目の記事は trdr さんの記事です. お楽しみに!!
+- KMC Advent Calendar 4 日目の記事は trdr さんの記事です. お楽しみに!!
 - 本記事のサンプル Ansible プロジェクトは以下にあります
   - <https://github.com/pollenjp/2023-12-03-article-sample>
 - [ansible-lint-custom-strict-naming · PyPI](https://pypi.org/project/ansible-lint-custom-strict-naming/) について
