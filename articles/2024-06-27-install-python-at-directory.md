@@ -118,33 +118,34 @@ some_directory/
 
 ## PYTHONUSERBASE に付いて
 
-一部の CLI ツールは `~/.local` や `~/.cache` 等にインストールされるまたは参照する可能性があります。
+Python は `pip install` でパッケージをインストールすることができますが、特に設定をしない場合は `~/.local` が使われてしまいます。
+Python がディレクトリ内に閉じていても、パッケージがディレクトリの外にインストールされてしまうのでは本末転倒です。
 
-今回 Python をディレクトリに閉じた環境にインストールしたように、CLI ツールなどもディレクトリに閉じて使いたい場合は、個別に環境変数を必要とする場合があります。
+CLI ツールの例として Pipx をインストールする例を以下に示したいと思います。
 
-例として、同じくディレクトリに閉じた Pipx (CLI ツール) 環境を構築する例を以下に示したいと思います。
-
-まず、環境変数を設定しないで以下のように `pip install` した場合、 `~/.local` にインストールされてしまいます。
+まず、環境変数を設定せずに以下のように `pip install` した場合、 `~/.local` にインストールされてしまいます。
 
 ```bash
 ./python.sh -m pip install --user pipx
 ```
 
 これは `pip install --user` がデフォルトでパッケージを `~/.local` 以下にインストールするためです。
-インストール先を特定のディレクトリに向けるには環境変数 [`PYTHONUSERBASE`](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONUSERBASE) で設定する必要があります。
+
+インストール先を特定のディレクトリに向けるには環境変数 [`PYTHONUSERBASE`](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONUSERBASE) を設定する必要があります。
 
 ```bash
 export PYTHONUSERBASE="$(realpath .)/.local"
 ./python.sh -m pip install --user pipx
 ```
 
-このようにすると `./.local/bin/pipx` で pipx を実行できるようになります。
+このようにすることで pipx は `./.local` にインストールされ、 `./.local/bin/pipx` で pipx を実行できるようになります。
 
 ## 注意: アプリ個別のユーザーディレクトリ設定
 
-先の例では pipx をインストールしてみましたが、 pipx 自体も注意して環境変数を設定しないとユーザーディレクトリ以下を使おうとします。
+先の例では pipx をインストールしてみましたが、 pipx 自体の設定にも注意する必要があります。
+環境変数を設定しない場合とユーザーディレクトリ以下を使ってしまいます。
 
-pipx の場合は以下の 3 つに注意が必要です。
+pipx において注意が必要なものは以下の 3 つです。
 
 - PIPX_HOME ... 仮想環境を配置する場所
 - PIPX_BIN_DIR ... 実行ファイルへの symlink を配置する場所
@@ -166,11 +167,11 @@ pipx の場合は以下の 3 つに注意が必要です。
 >                         Manual pages are symlinked or copied here.
 > ```
 
-設定例は次の後述します。
+設定例は次のセクションで示します。
 
 ## 実行例
 
-今までの情報を元に、一連の流れを試してみます。
+今までの情報を元に一連の流れを示します。
 
 - 独立した Python をインストール
 - インストールした Python の pip を利用して pipx をインストール
@@ -178,15 +179,19 @@ pipx の場合は以下の 3 つに注意が必要です。
 - pyjokes を実行
 
 ```bash
+# .local/py 以下に Python をインストール
 ./install-python.sh
+# pip をアップグレード (./.local/bin/pip)
 ./python.sh -m pip install --user -U pip
+# .local 以下に pipx をインストール
 ./python.sh -m pip install --user pipx
 
-# pipx を使って pyjokes をインストール
+# pipx 用の環境変数設定
 local_dir="$(realpath .)/.local"
 export PIPX_HOME="${local_dir}/share/pipx/venvs"
 export PIPX_BIN_DIR="${local_dir}/bin"
 export PIPX_MAN_DIR="${local_dir}/share/man"
+# pipx を使って pyjokes をインストール
 ./python.sh -m pipx install pyjokes
 
 # pyjoke コマンド実行
