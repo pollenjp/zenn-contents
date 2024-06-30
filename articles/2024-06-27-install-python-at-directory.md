@@ -14,19 +14,9 @@ published: true
 
 本記事では、python-build-standalone のバイナリを使い、お手軽にディレクトリ内に閉じた Python 環境構築する方法を紹介します。
 
-## 結論
+※ python-build-standalone バイナリの [Runtime Requirements はこちら](https://gregoryszorc.com/docs/python-build-standalone/main/running.html#runtime-requirements)
 
-```txt
-some_directory/
-|-- .cache/           ... python-build-standalone からダウンロードしたファイルを保存
-|-- .local/           ... `~/.local` (XDG_DATA_HOME) と似た役割を持たせる
-|   `-- py/3.X,Y/     ... Python のインストール先 (展開先)
-|      |-- ...
-|      `-- bin/       ... PATH に追加
-|
-|-- install-python.sh ... Python のインストールスクリプト
-`-- python.sh         ... Python のラッパー (シェルスクリプト)
-```
+## 結論
 
 `./install-python.sh`
 
@@ -79,7 +69,7 @@ fi
 echo "Python is installed at ${python_build_standalone_dir}/install/bin"
 ```
 
-実行する際は `${python_build_standalone_dir}/install/bin` を PATH に追加してあげれば実行できます。
+Python を実行する際は `${python_build_standalone_dir}/install/bin` を PATH に追加してあげれば実行できます。
 
 以下のような wrapper のスクリプトを用意しておくと便利です。
 
@@ -111,6 +101,20 @@ python "$@"
 ```
 
 ※ `PYTHONUSERBASE` については後述します。
+
+## 想定ディレクトリ構成
+
+```txt
+some_directory/
+|-- .cache/           ... python-build-standalone からダウンロードしたファイルを保存
+|-- .local/           ... `~/.local` (XDG_DATA_HOME) と似た役割を持たせる
+|   `-- py/3.X,Y/     ... Python のインストール先 (展開先)
+|      |-- ...
+|      `-- bin/       ... PATH に追加
+|
+|-- install-python.sh ... Python のインストールスクリプト
+`-- python.sh         ... Python のラッパー (シェルスクリプト)
+```
 
 ## PYTHONUSERBASE に付いて
 
@@ -191,7 +195,7 @@ export PIPX_MAN_DIR="${local_dir}/share/man"
 
 ## そのた他の方法
 
-今回紹介した方法の他に、任意の Python バージョンを利用する方法はいくつかあります。
+ディレクトリ内に閉じていることをキにしなければ、今回紹介した方法以外にも任意の Python バージョンを利用する方法はいくつかあります。
 
 - Python ビルド
   - 公式の Python ビルド
