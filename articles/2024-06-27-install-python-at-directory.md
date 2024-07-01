@@ -20,6 +20,8 @@ published: true
 
 ## 結論
 
+以下のスクリプトを実行して Python バイナリをディレクトリ以下に配置します。
+
 `./install-python.sh`
 
 ```bash
@@ -71,7 +73,7 @@ fi
 echo "Python is installed at ${python_build_standalone_dir}/install/bin"
 ```
 
-Python を実行する際は `${python_build_standalone_dir}/install/bin` を PATH に追加してあげれば実行できます。
+ダウンロードした Python を実行する際は `${python_build_standalone_dir}/install/bin` を PATH に追加してあげれば OK です。
 
 以下のような wrapper のスクリプトを用意しておくと便利です。
 
