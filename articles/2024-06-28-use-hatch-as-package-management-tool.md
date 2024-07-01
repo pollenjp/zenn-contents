@@ -107,3 +107,25 @@ hatch run fmt
 # all 環境の test コマンドを実行したい時
 hatch run all:test
 ```
+
+## rye, hatch, poetry の比較
+
+|                       | rye            | hatch | poetry          |
+| --------------------- | -------------- | ----- | --------------- |
+| Python のインストール | o              | o     | x               |
+| build-system の提供   | x              | o     | o (poetry-core) |
+| パッケージ作成        | o              | o     | o               |
+| 開発環境の構築        | o (2 環境のみ) | o     | o               |
+| パッケージ依存性解決  | o              | x     | o               |
+
+## 終わりに
+
+hatch をパッケージ管理ツールとして触ってみた感想を雑に書いてみました。
+
+今まで build-system としての hatch は使ったことがありましたが、パッケージ管理ツールとしては初めて使いました。
+
+既に使ったことのある rye や poetry との違いを感じることができましたが、シングルバイナリという導入のしやすさを考えると個人的には rye がイチオシです。
+
+一方で poetry に近いような細かい設定もできつつ、Python バイナリのインストールも行える hatch は他のツールと比べても一長一短があると感じました。
+
+※ ディレクトリに閉じた環境で Python バイナリを構築したい場合は[こちらの記事](https://zenn.dev/pollenjp/articles/2024-06-27-install-python-at-directory)をご参照ください。
