@@ -8,11 +8,13 @@ published: true
 
 ## はじめに
 
-サーバーでちょっとしたスクリプトを実行したいときに使う言語にはいくつか候補がありますが、今回は Python を使うことを考えます。
-
-例えば、共用で使うことが前提のサーバーなどでは、自分が動かすスクリプト以外には影響を与えないようにしたいです。
-
 本記事では、python-build-standalone のバイナリを使い、お手軽にディレクトリ内に閉じた Python 環境構築する方法を紹介します。
+
+ユースケースとしては以下のような場面を想定しています。
+
+- 「サーバー上で動かすちょっとしたスクリプトを実行したいけど、システムの Python のバージョンが古い」
+- 「Python をインストールしたいけど他の環境やディレクトリには影響を与えたくない」
+- 「Docker を導入するほどではない」
 
 ※ python-build-standalone バイナリの [Runtime Requirements はこちら](https://gregoryszorc.com/docs/python-build-standalone/main/running.html#runtime-requirements)
 
