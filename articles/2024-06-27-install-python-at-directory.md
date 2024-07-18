@@ -202,7 +202,7 @@ export PIPX_MAN_DIR="${local_dir}/share/man"
 ./.local/bin/pyjoke
 ```
 
-## そのた他の方法
+## その他の方法
 
 ディレクトリ内に閉じていることをキにしなければ、今回紹介した方法以外にも任意の Python バージョンを利用する方法はいくつかあります。
 
