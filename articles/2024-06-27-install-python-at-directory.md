@@ -8,6 +8,8 @@ published: true
 
 ## はじめに
 
+追記 2024-09-20: ササッと実行したい人は[こちら](https://gist.github.com/pollenjp/14663edb05957fd5060672c7e0e89317)
+
 本記事では、python-build-standalone のバイナリを使い、お手軽にディレクトリ内に閉じた Python 環境構築する方法を紹介します。
 
 ユースケースとしては以下のような場面を想定しています。
