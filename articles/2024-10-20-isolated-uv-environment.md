@@ -1,5 +1,5 @@
 ---
-title: "PythonのUVを特定のディレクトリに閉じて使う"
+title: "Pythonのuvを特定のディレクトリに閉じて使う"
 emoji: "🐍"
 type: "tech"
 topics: ["uv", "python"]
