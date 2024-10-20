@@ -59,6 +59,8 @@ curl https://raw.githubusercontent.com/pollenjp/install-uv.sh/refs/tags/v0.0.1/i
 やっていることは極めて単純で、指定したディレクトリに uv をインストールし、 `pycmd` 上で [XDG Base Directory](https://specifications.freedesktop.org/basedir-spec/latest/) をカスタマイズすることで外部のディレクトリを汚さないようにしています。
 XDG Base Directory の環境変数を指定すれば uv は適切に参照先を切り替えてくれるように作られています。
 
+そんなに長くないので興味がある方は[ソース](https://github.com/pollenjp/install-uv.sh)のシェルを読んでいただけると幸いです。
+
 ## 最後に
 
 ちょこっとした Python スクリプトを社内で共有する際に意外と便利なのでぜひ使って見てください。
