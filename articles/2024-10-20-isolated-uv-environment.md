@@ -3,7 +3,7 @@ title: "PythonのUVを特定のディレクトリに閉じて使う"
 emoji: "🐍"
 type: "tech"
 topics: ["uv", "python"]
-published: true
+published: false
 ---
 
 ## 使い方
