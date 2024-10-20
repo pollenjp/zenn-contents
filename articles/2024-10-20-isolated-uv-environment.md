@@ -25,17 +25,6 @@ Python スクリプトを実行する際には必ず実行環境の Python の�
 #
 # INSTALL_UV_TARGET_VERSION を指定しない場合は latest なバージョンを自動取得しますが jq command が必要です
 curl https://raw.githubusercontent.com/pollenjp/install-uv.sh/refs/heads/main/install-uv.sh | env bash -eu -o pipefail
-
-# jq command をインストールしたくない人は INSTALL_UV_TARGET_VERSION を指定してください
-curl https://raw.githubusercontent.com/pollenjp/install-uv.sh/refs/heads/main/install-uv.sh \
-  | env INSTALL_UV_TARGET_VERSION=0.4.24 bash -eu -o pipefail
-
-# インストール先を指定したい場合は INSTALL_UV_BASE_DIR を指定してください
-curl https://raw.githubusercontent.com/pollenjp/install-uv.sh/refs/heads/main/install-uv.sh \
-  | env INSTALL_UV_BASE_DIR=./tmp bash -eu -o pipefail
-
-# ※ 執筆時点での `install-uv.sh` のバージョンは `v0.0.1` なのでそれに合わせる場合は以下
-curl https://raw.githubusercontent.com/pollenjp/install-uv.sh/refs/tags/v0.0.1/install-uv.sh | bash -eu -o pipefail
 ```
 
 任意のコマンドをこの `pycmd` の引数に渡すことで、ローカルにインストールされた uv を参照してくれます。
@@ -48,6 +37,21 @@ uv 0.4.24
 $ ./pycmd -- uv python install 3.12
 Searching for Python versions matching: Python 3.12
 Installed Python 3.12.7 in 2.85s
+```
+
+## その他のオプション
+
+```sh
+# jq command をインストールしたくない人は INSTALL_UV_TARGET_VERSION を指定してください
+curl https://raw.githubusercontent.com/pollenjp/install-uv.sh/refs/heads/main/install-uv.sh \
+  | env INSTALL_UV_TARGET_VERSION=0.4.24 bash -eu -o pipefail
+
+# インストール先を指定したい場合は INSTALL_UV_BASE_DIR を指定してください
+curl https://raw.githubusercontent.com/pollenjp/install-uv.sh/refs/heads/main/install-uv.sh \
+  | env INSTALL_UV_BASE_DIR=./tmp bash -eu -o pipefail
+
+# ※ 執筆時点での `install-uv.sh` のバージョンは `v0.0.1` なのでそれに合わせる場合は以下
+curl https://raw.githubusercontent.com/pollenjp/install-uv.sh/refs/tags/v0.0.1/install-uv.sh | bash -eu -o pipefail
 ```
 
 ## ちょっとした解説
