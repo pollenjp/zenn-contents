@@ -1,5 +1,5 @@
 ---
-title: "そのSetup系GitHub Actions、ちゃんとキャッシュできていますか？ (Tool Cache)"
+title: "そのSetup系GitHub Actions、ちゃんとキャッシュできていますか？ (@actions/tool-cache)"
 emoji: "🚢"
 type: "tech"
 topics: ["github-actions", "tool-cache"]
@@ -27,18 +27,19 @@ TODO: planning to published at Qiita
 
 こんにちは、ぽれん(@'ω'@)です。
 
-私は最近、 shfmt や shellcheck を Self-hosted Runner で利用してみたかったのですが、どうにもちゃんとキャッシュしてくれる 3rd Party Action が見つからなかったため、自分で作ってみました。
+私は最近、 shfmt や shellcheck を Self-hosted Runner で使いたかったのですが、どうにもちゃんとキャッシュしてくれる 3rd Party Action が見つからなかったため、自分で作ってみました。
 
 - [pollenjp/setup-shfmt](https://github.com/pollenjp/setup-shfmt)
 - [pollenjp/setup-shellcheck](https://github.com/pollenjp/setup-shellcheck)
 
-今まで workflow を書くときは `run` step の中で shell をこねくり回すことが多く、ちょうど嫌気が指していたところだったため TypeScript の Custom Action を触る良い機会となりました。
+今まで workflow を書くときは `run` step の中で shell をこねくり回すことが多く、ちょうど嫌気が指していたタイミングだったため TypeScript の Custom Action を学ぶ良い機会となりました。
 
-また別の話ですが、私は普段 [astral-sh/uv](https://github.com/astral-sh/uv) というツールを好んで使っているのですが、公式で提供されている [astral-sh/setup-uv](https://github.com/astral-sh/setup-uv) が一部条件でキャッシュしてくれないことに気づき、自分で使うためにも PR を出して改善する機会をいただけました。幸い元から TypeScript で書かれていたので、その場でその場でキャッシュの仕組みを理解して実装することができました。
+また別の話ですが、私は普段 [astral-sh/uv](https://github.com/astral-sh/uv) というツールを好んで使っているのですが、公式で提供されている [astral-sh/setup-uv](https://github.com/astral-sh/setup-uv) では一部の条件でキャッシュしてくれないことに気づきました。
+幸い元から TypeScript で書かれていたので、すんなり理解することができ、改善する機会をいただくことができました。
 
 - [astral-sh/setup-uv#178](https://github.com/astral-sh/setup-uv/pull/178)
 
-本記事はこれらの経験を踏まえて、 setup 系 GitHub Actions を作る際にキャッシュとは何をすることでどのように管理するのが良いとされているのかについてまとめたものです。
+本記事はこれらの経験を踏まえて、 setup 系 GitHub Actions を作る際のキャッシュに関する話をまとめたものです。
 
 ## TL;DR
 
