@@ -9,7 +9,7 @@ published: true
 ## まえがき
 
 みなさんこんにちは! KMCID: pollenjp です.
-本記事は [KMC Advent Calendar 2023](https://adventar.org/calendars/8840) の 3 日目の記事と [Ansible Advent Calendar 2023]() です.
+本記事は [KMC Advent Calendar 2023](https://adventar.org/calendars/8840) の 3 日目の記事です.
 
 昨日の記事は taisei さんによる [Jsoo でスイカゲームもどき | A watermelon game on browser implemented in ocaml](https://taiseikmc.github.io/watermelon-game-jsoo/blog/index.html) でした.
 元のスイカゲームは動画などでしか見たことはなかったのですが, **スイカゲームもどき**を触ってみて絶妙なゲームバランスに納得し楽しめました.
