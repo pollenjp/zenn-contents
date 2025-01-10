@@ -1,0 +1,8 @@
+title: "IaCが損なわれた内製ツール開発"
+summary: "IaCが損なわれた内製ツール開発現場で起こる負のスパイラルを記述します"
+topics: ["IaC", "DevOps", "ツール開発"]
+published: false
+price: 0
+chapters:
+  - tool-development-pyramid
+  - what-is-iac
