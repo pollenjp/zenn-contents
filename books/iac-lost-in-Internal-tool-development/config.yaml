@@ -1,0 +1,11 @@
+title: "内製ツール開発を支える IaC の重要性"
+summary: "IaC の重要性を説明し、IaC が存在しないどのような崩壊が起こるのかを記述します。"
+topics: ["IaC", "DevOps", "開発"]
+published: true
+price: 0
+chapters:
+  - 01-introduction
+  - 02-development-pyramid
+  - 03-example
+  - 04-ideal-iac
+  - 05-upside-down-pyramid
