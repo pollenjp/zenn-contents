@@ -4,8 +4,8 @@ topics: ["IaC", "DevOps", "開発"]
 published: true
 price: 0
 chapters:
-  - 01-introduction
-  - 02-development-pyramid
-  - 03-example
-  - 04-ideal-iac
-  - 05-upside-down-pyramid
+  - 00_01_00-introduction
+  - 00_02_00-development-pyramid
+  - 00_03_00-example
+  - 00_04_00-ideal-iac
+  - 00_05_00-upside-down-pyramid
