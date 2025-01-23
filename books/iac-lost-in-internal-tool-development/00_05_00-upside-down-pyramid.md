@@ -18,7 +18,7 @@ IaC 周りを管理する人がいない現場ではデプロイ周りの責任�
 
 1. IaC の崩壊
 1. コードの環境やデバイスへの依存が高まる
-   - [The Twelve-Factor App「III. Config」](https://12factor.net/config) の崩壊
+   - 責任の分離の崩壊
 1. デプロイ環境の切り替えが難しくなり、再構築性 (Reconstructability) が低下する
    - 可逆性の崩壊
 1. デプロイコストが増加し、 展開容易性 (Deployability) が低下する
