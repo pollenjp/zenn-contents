@@ -1,5 +1,6 @@
 title: "内製ツール開発を支える IaC の重要性"
-summary: "IaC の重要性を説明し、IaC が存在しないどのような崩壊が起こるのかを記述します。"
+summary: |
+  内製ツール開発現場における IaC (Infrastructure as Code) の立ち位置を整理し、その重要性について説明します (個人の考え含む)。
 topics: ["IaC", "DevOps", "開発"]
 published: true
 price: 0
