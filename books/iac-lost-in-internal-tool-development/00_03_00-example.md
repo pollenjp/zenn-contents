@@ -63,7 +63,7 @@ AWS 上で EC2 (ただの Linux マシン) を確保し、 systemd でアプリ�
 
 ## 開発は継続するもの
 
-おすすめはしません[^quality_is_not_an_act_it_is_a_habit][^market_pressure_is_never_stop]、リリースを急かされている場合はこのように手動でデプロイすることもあるでしょう。 しかし、ここで手を止めてしまったら崩壊の始まりです。
+おすすめはしません[^quality_is_not_an_act_it_is_a_habit][^market_pressure_is_never_stop]が、リリースを急かされている場合はこのように手動でデプロイすることもあるでしょう。 しかし、ここで手を止めてしまったら崩壊の始まりです。
 
 [^quality_is_not_an_act_it_is_a_habit]: Quality is not an act, it is a habit. (アリストテレス) / できる人は当たり前に最初から IaC 周りを考慮しているように感じます。
 [^market_pressure_is_never_stop]: 「あとでクリーンにすればいいよ. 先に市場に出さなければ!」 開発者たちはそうやっていつもごまかす. だが, あとでクリーンにすることはない. 市場からのプレッシャーは止まらないからだ. (『Clean Architecture 達人に学ぶソフトウェアの構造と設計』)
