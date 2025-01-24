@@ -1,5 +1,5 @@
 ---
-title: "絶えず変化を求められる"
+title: "具体例の中での立ち位置"
 ---
 
 ここではこのピラミッド構造の解像度を高め、具体的な課題を例示し、それに伴う各々の作業について説明します。
@@ -39,7 +39,8 @@ title: "絶えず変化を求められる"
 
 ## 手動でデプロイする
 
-AWS 上で EC2 (ただの Linux マシン) を確保し、 systemd でアプリケーションを動かすことを考えてみましょう。
+「環境構築・デプロイ」レイヤで行っていることを具体的な行動として考えてみます。
+AWS で確保した Linux マシンに systemd 経由でアプリケーションを動かす例を考えて見ましょう。
 
 何も考えずに手動でデプロイする場合は以下のような作業が必要になります。
 
@@ -59,39 +60,9 @@ AWS 上で EC2 (ただの Linux マシン) を確保し、 systemd でアプリ�
       - 環境変数の設定
     - 順次 systemd start で起動
 
-ここまでやってやっと依頼者に利用してもらうことができるようになります。
+やることは単調ですが、ここまでやってやっと依頼者に利用してもらうことができるようになります。
 
-## 開発は継続するもの
-
-おすすめはしません[^quality_is_not_an_act_it_is_a_habit][^market_pressure_is_never_stop]が、リリースを急かされている場合はこのように手動でデプロイすることもあるでしょう。 しかし、ここで手を止めてしまったら崩壊の始まりです。
+リリースを急かされている場合はこのように手動でデプロイすることもあるかもしれませんがおすすめはできません。 一度リリースされたサービスに伴う運用コストや追加依頼は「自動化」に回す工数を奪い、崩壊の音が聞こえ始めるでしょう[^quality_is_not_an_act_it_is_a_habit][^market_pressure_is_never_stop]。
 
 [^quality_is_not_an_act_it_is_a_habit]: Quality is not an act, it is a habit. (アリストテレス) / できる人は当たり前に最初から IaC 周りを考慮しているように感じます。
 [^market_pressure_is_never_stop]: 「あとでクリーンにすればいいよ. 先に市場に出さなければ!」 開発者たちはそうやっていつもごまかす. だが, あとでクリーンにすることはない. 市場からのプレッシャーは止まらないからだ. (『Clean Architecture 達人に学ぶソフトウェアの構造と設計』)
-
-たとえ小さなアプリケーションだとしても初期リリース以降も、Feedback を元にコード改修は繰り返します。
-内製ツールの場合そうやって Usability (使いやすさ) を高めていくことで会社のパフォーマンスにつながります。
-
-:::message
-偶に最初の要件定義段階でこれ以上仕様変更しないように要求元に圧をかける姿が想像されますが、それを行ったところで市場からあふれる変化の圧力が止まることはありません。結局、改善要求が降りかかるか、せっかく開発されたツールが使われなくなるか、あるいは改善したいことがあっても声を出せない環境を作り出すでしょう。
-:::
-
-[![Image from Gyazo](https://i.gyazo.com/9be5519fd4f9e12bbf652ca7d1efcca0.png)](https://gyazo.com/9be5519fd4f9e12bbf652ca7d1efcca0)
-
-改善を行っていくにはコード自身に対する変更容易性 (Modifiability) や運用性 (Operability) 等も向上させ、継続的に発生する運用コストを最小化しなければなりません[^why_operability_is_important]。
-
-[^why_operability_is_important]: 基本的に楽でない運用はミスを誘発[^why_operability_is_important_2]し、運用者にプレッシャーを与えるだけでなく、建設的なコード改善に当てる工数を奪います。
-[^why_operability_is_important_2]:
-    運用現場は楽じゃないとミスが起こる
-    [Infrastructure as Code でセキュリティを楽にしよう ! #AWSDevLiveShow - YouTube](https://www.youtube.com/live/qr_Fx_ENjxE?si=tGnLqBipnMmpTqlh&t=380)
-
-必然的にアプリケーションは何度も改修され、細かくデプロイすることが求められます[^may_not_deploy_because_of_low_deployability]。
-そこで「環境構築とデプロイ」レイヤに求められるのが **展開容易性 (Deployability)** であり、**再構築容易性 (Reconstructability)** になります。
-
-[^may_not_deploy_because_of_low_deployability]: 本当にそんなに deploy するのか？と思った人がいるかも知れませんが、その場合は Deployability が低く触る勇気が持てないから次の deploy が起こらない可能性があります。
-
-以降のセクションでは
-
-- どうやってこれを可能にするのか
-- この責任を放棄するとどのような崩壊のパンデミックが起こるのか
-
-を考えていきます。
