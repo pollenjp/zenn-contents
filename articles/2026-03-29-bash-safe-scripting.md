@@ -23,10 +23,10 @@ set -euo pipefail
 
 各オプションの意味：
 
-| オプション | 意味 |
-|---|---|
-| `-e` | コマンドが非ゼロで終了したらスクリプトを即終了 |
-| `-u` | 未定義の変数を参照したらエラーで終了 |
+| オプション    | 意味                                                     |
+| ------------- | -------------------------------------------------------- |
+| `-e`          | コマンドが非ゼロで終了したらスクリプトを即終了           |
+| `-u`          | 未定義の変数を参照したらエラーで終了                     |
 | `-o pipefail` | パイプライン内のどこかのコマンドが失敗したら非ゼロを返す |
 
 ### NG 例
@@ -51,34 +51,79 @@ echo "ここには来ない"
 
 `-o pipefail` がないと `false | true` の終了ステータスが `0` になります。パイプの途中でコケても気づけないのは危険なのでセットで。
 
-## `local` とコマンド置換の組み合わせに注意
+## `shopt -s inherit_errexit` もセットで
 
-`set -e` を入れていても拾えない罠があります。関数内で `local` と組み合わせたときです。
+`set -euo pipefail` を入れても、`$()` コマンド置換で作られるサブシェルにはデフォルトで `errexit` が継承されません。サブシェル内でコマンドが失敗しても `set -e` が効かないケースがあります。
 
-```bash
+対策は `shopt -s inherit_errexit` をあわせて設定することです：
+
+### NG 例 (コマンド置換で呼ばれたサブシェルでエラーがあっても止まらない)
+
+```sh
 #!/usr/bin/env bash
 set -euo pipefail
+# shopt -s inherit_errexit
+# <- comment out
 
-get_value() {
-  local result=$(false)  # false は終了ステータス 1 だが…
-  echo "ここに来てしまう"  # 実行される！
-  echo "$result"
+echo "start-main"
+
+hello() {
+    echo "start-hello"
+    failing_command
+    echo "end-hello"
 }
 
-get_value
+x=$(hello)
+echo "$x"
+
+echo "end-main"
 ```
 
-`local` コマンド自体の終了ステータスは常に `0` なので、`$(false)` が失敗しても `-e` がトリガーされません。これは有名な bash の罠です。
+コマンド実行
 
-対策は代入と `local` 宣言を分けること：
+```sh
+./script.sh
+```
 
-```bash
-get_value() {
-  local result
-  result=$(false)  # これは -e が効く
-  echo "$result"
+出力
+
+```txt
+start-main
+./tmp.sh: line 9: failing_command: command not found
+start-hello
+end-hello
+end-main
+```
+
+### OK 例 (`shopt -s inherit_errexit` を入れるとサブシェル内のエラーも拾える)
+
+```sh
+#!/usr/bin/env bash
+set -euo pipefail
+shopt -s inherit_errexit
+
+echo "start-main"
+
+hello() {
+    echo "start-hello"
+    failing_command
+    echo "end-hello"
 }
+
+x=$(hello)
+echo "$x"
+
+echo "end-main"
 ```
+
+以下は出力です。
+
+```txt
+start-main
+./tmp.sh: line 9: failing_command: command not found
+```
+
+これでサブシェル内でも `errexit` が有効になります。shellcheck の [SC2311](https://www.shellcheck.net/wiki/SC2311) がこの問題を警告してくれます。
 
 ## shellcheck で修行する
 
@@ -129,6 +174,33 @@ some_command "${result}"
 
 一度変数に詰めることで、`set -e` が正しく効くようになります。
 
+### `export` や `local` も注意
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+get_value() {
+  local result=$(false)  # false は終了ステータス 1 だが…
+  echo "ここに来てしまう"  # 実行される！
+  echo "$result"
+}
+
+get_value
+```
+
+`local` コマンド自体の終了ステータスは常に `0` なので、`$(false)` が失敗しても `-e` がトリガーされません。これは有名な bash の罠です。
+
+対策は代入と `local` 宣言を分けること：
+
+```bash
+get_value() {
+  local result
+  result=$(false)  # これは -e が効く
+  echo "$result"
+}
+```
+
 ## プロセス置換も同様
 
 `<(cmd)` を使ったプロセス置換も同じ罠があります。
@@ -158,9 +230,9 @@ done <<< "${data}"
 
 `set -o posix` を使うと bash を POSIX 準拠モードで動かせます。コマンド置換などの挙動をより厳密にする効果があります。
 
-https://w3.pppl.gov/info/bash/Bash_POSIX_Mode.html
+ただし、bash 固有の機能の一部に制限が加わるので、既存スクリプトへの適用はコストが高めです。また POSIX mode を有効化した上でのshellcheck の一部チェックが効かなくなる懸念もあります。
 
-ただし、bash 固有の便利機能（配列、`[[` 等）が使えなくなるので、既存スクリプトへの適用はコストが高めです。また shellcheck の一部チェックが効かなくなる懸念もあります。
+制限周りについては [こちらのページ (Bash POSIX Mode)](https://w3.pppl.gov/info/bash/Bash_POSIX_Mode.html) 等にまとまっています。
 
 **結論**: `set -euo pipefail` + shellcheck の組み合わせで十分なケースがほとんどです。POSIX mode はオプションとして知っておく程度でよいでしょう。
 
