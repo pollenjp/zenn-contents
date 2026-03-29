@@ -92,21 +92,67 @@ get_value() {
 shellcheck your_script.sh
 ```
 
-さらに厳密に検査したい場合は `--enable=all` を付けます：
+個人的にはもっと厳密にしたほうが良いので `--enable=all` を付けます：
 
 ```bash
 shellcheck --enable=all your_script.sh
 ```
 
-`.editorconfig` に以下を書いておくと、エディタの shellcheck プラグインが自動で適用してくれます：
+`.shellcheckrc` に以下を書いておくと、エディタの shellcheck プラグインやコマンドが自動で適用してくれます：
 
-```ini
-[*.sh]
-shell=bash
+```.shellcheckrc
 enable=all
 ```
 
 CI に組み込むのもおすすめです。
+
+## 引数内でのコマンド置換に注意
+
+`set -e` を入れていても、引数の中で `$(cmd)` を使うと失敗を拾えないことがあります。
+
+### NG 例
+
+```bash
+# NG: failing_command が失敗しても set -e で止まらない
+some_command "$(failing_command)"
+```
+
+`$(failing_command)` が失敗しても、`some_command` に空文字列が渡って処理が続いてしまいます。
+
+### OK 例
+
+```bash
+# OK: まず変数に受ける（ここで失敗すれば set -e が効く）
+result=$(failing_command)
+some_command "${result}"
+```
+
+一度変数に詰めることで、`set -e` が正しく効くようになります。
+
+## プロセス置換も同様
+
+`<(cmd)` を使ったプロセス置換も同じ罠があります。
+
+### NG 例
+
+```bash
+# NG: failing_command が失敗しても止まらない
+while read -r line; do
+  echo "${line}"
+done < <(failing_command)
+```
+
+### OK 例
+
+```bash
+# OK: まず変数に受ける
+data=$(failing_command)
+while read -r line; do
+  echo "${line}"
+done <<< "${data}"
+```
+
+ヒアストリング (`<<<`) で渡せば、失敗は変数代入の時点で `set -e` が検知します。
 
 ## POSIX mode について
 
@@ -122,6 +168,7 @@ https://w3.pppl.gov/info/bash/Bash_POSIX_Mode.html
 
 - `set -euo pipefail` はとりあえず入れる
 - `local result=$(cmd)` は罠。宣言と代入を分ける
+- 引数内の `$(cmd)` や `<(cmd)` も罠。一度変数に受けてから使う
 - shellcheck を CI に入れて静的解析を習慣化する
 
 bash は書けるけど安全に書けているかは別の話。まずは既存スクリプトに shellcheck をかけてみるのが最初の一歩です。
