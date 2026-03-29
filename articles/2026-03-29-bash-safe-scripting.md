@@ -87,7 +87,7 @@ echo "end-main"
 
 ```txt
 start-main
-./tmp.sh: line 9: failing_command: command not found
+./script.sh: line 9: failing_command: command not found
 start-hello
 end-hello
 end-main
