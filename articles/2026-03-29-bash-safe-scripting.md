@@ -1,5 +1,5 @@
 ---
-title: "bash スクリプトで踏みやすい罠と対策"
+title: "bash スクリプトで踏みやすい罠: set -euo pipefail / shopt -s inherit_errexit / コマンド置換・プロセス置換 / shellcheck"
 emoji: "🛡️"
 type: "tech"
 topics: ["bash", "shellscript", "linux"]
@@ -8,9 +8,7 @@ published: false
 
 ## まえがき
 
-bash スクリプトって、なんとなく書いてもそれっぽく動くんですよね。でもそれが罠で、エラーを握りつぶしていたり、意図しない変数を参照していたりしても気づかないことがある。
-
-目次をチラ見して全部にうなづけなかったら一読の価値があるかも、という雑な記事です。
+目次をチラ見して「あーはいはい」とならなかったら一読の価値があるかも、という雑な記事です。
 
 ## `set -euo pipefail` はとりあえず入れよう
 
