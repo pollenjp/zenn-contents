@@ -224,7 +224,7 @@ done <<< "${data}"
 
 ヒアストリング (`<<<`) で渡せば、失敗は変数代入の時点で `set -e` が検知します。
 
-## 【補足】`set -o pipefail` と `head` は相性悪いので `awk` とかで代用しときな
+## 【補足】`set -o pipefail` と `head` は相性悪いので `awk` とかで代用しよう
 
 `set -o pipefail` 環境下で `some_command | head -n 5` のようなパイプを使うと、`head` が必要な行を読み終えた時点でパイプを閉じ、左側のコマンドが SIGPIPE を受けて非ゼロで終了します。`pipefail` はパイプ内の最後の非ゼロ終了コードを拾うため、スクリプトが意図せず停止することがあります。
 
@@ -254,9 +254,10 @@ some_command | awk 'NR<=5'
 
 ## まとめ
 
-- `set -euo pipefail` はとりあえず入れる
-- `local result=$(cmd)` は罠。宣言と代入を分ける
-- 引数内の `$(cmd)` や `<(cmd)` も罠。一度変数に受けてから使う
-- shellcheck を CI に入れて静的解析を習慣化する
+- `set -euo pipefail` + `shopt -s inherit_errexit` をスクリプト冒頭に（サブシェルにも `errexit` を継承させる）
+- コマンド置換・プロセス置換 (`$(cmd)` / `<(cmd)`) は一度変数に受けてから使う（`local` 宣言との合わせ技も罠なので宣言と代入は分ける）
+- `pipefail` + `head` は SIGPIPE の罠。`awk 'NR<=N'` で代替
+- shellcheck は `.shellcheckrc` に `enable=all` を書いて CI に組み込む
+- POSIX mode はお好みで（`set -euo pipefail` + shellcheck で十分なケースがほとんど）
 
 bash は書けるけど安全に書けているかは別の話。まずは既存スクリプトに shellcheck をかけてみるのが最初の一歩です。
