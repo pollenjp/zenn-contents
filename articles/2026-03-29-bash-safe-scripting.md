@@ -118,7 +118,7 @@ echo "end-main"
 
 ```txt
 start-main
-./tmp.sh: line 9: failing_command: command not found
+./script.sh: line 9: failing_command: command not found
 ```
 
 これでサブシェル内でも `errexit` が有効になります。shellcheck の [SC2311](https://www.shellcheck.net/wiki/SC2311) がこの問題を警告してくれます。
