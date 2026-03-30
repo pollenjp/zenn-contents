@@ -1,5 +1,5 @@
 ---
-title: "bash スクリプトで踏みやすい罠: set -euo pipefail / shopt -s inherit_errexit / コマンド置換・プロセス置換 / shellcheck"
+title: "bashスクリプトで踏みやすい罠:pipefail/inherit_errexit/コマンド置換・プロセス置換/shellcheck"
 emoji: "🛡️"
 type: "tech"
 topics: ["bash", "shellscript", "linux"]
