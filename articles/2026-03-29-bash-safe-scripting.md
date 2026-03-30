@@ -3,7 +3,7 @@ title: "bash スクリプトで踏みやすい罠: set -euo pipefail / shopt -s 
 emoji: "🛡️"
 type: "tech"
 topics: ["bash", "shellscript", "linux"]
-published: false
+published: true
 ---
 
 ## まえがき
