@@ -27,7 +27,7 @@ set -euo pipefail
 | `-u`          | 未定義の変数を参照したらエラーで終了                     |
 | `-o pipefail` | パイプライン内のどこかのコマンドが失敗したら非ゼロを返す |
 
-### NG 例
+### NG 例 (set -euo pipefail なし)
 
 ```bash
 #!/usr/bin/env bash
@@ -37,7 +37,7 @@ cat not_exist.txt    # エラーになるが続行
 echo "続いちゃう"    # 実行される
 ```
 
-### OK 例
+### OK 例 (set -euo pipefail あり)
 
 ```bash
 #!/usr/bin/env bash
@@ -153,7 +153,7 @@ CI に組み込むのもおすすめです。
 
 `set -e` を入れていても、引数の中で `$(cmd)` を使うと失敗を拾えないことがあります。
 
-### NG 例
+### NG 例 (引数内コマンド置換)
 
 ```bash
 # NG: failing_command が失敗しても set -e で止まらない
@@ -162,7 +162,7 @@ some_command "$(failing_command)"
 
 `$(failing_command)` が失敗しても、`some_command` に空文字列が渡って処理が続いてしまいます。
 
-### OK 例
+### OK 例 (コマンド置換→変数に受ける)
 
 ```bash
 # OK: まず変数に受ける（ここで失敗すれば set -e が効く）
@@ -203,7 +203,7 @@ get_value() {
 
 `<(cmd)` を使ったプロセス置換も同じ罠があります。
 
-### NG 例
+### NG 例 (プロセス置換)
 
 ```bash
 # NG: failing_command が失敗しても止まらない
@@ -212,7 +212,7 @@ while read -r line; do
 done < <(failing_command)
 ```
 
-### OK 例
+### OK 例 (変数に受ける)
 
 ```bash
 # OK: まず変数に受ける
@@ -228,14 +228,14 @@ done <<< "${data}"
 
 `set -o pipefail` 環境下で `some_command | head -n 5` のようなパイプを使うと、`head` が必要な行を読み終えた時点でパイプを閉じ、左側のコマンドが SIGPIPE を受けて非ゼロで終了します。`pipefail` はパイプ内の最後の非ゼロ終了コードを拾うため、スクリプトが意図せず停止することがあります。
 
-### NG 例
+### NG 例 (pipefail + head)
 
 ```bash
 # NG: pipefail 環境下で SIGPIPE によりスクリプトが停止することがある
 some_command | head -n 5
 ```
 
-### OK 例
+### OK 例 (pipefail + awk)
 
 ```bash
 # OK: awk を使えば SIGPIPE を発生させずに先頭 N 行を取得できる
