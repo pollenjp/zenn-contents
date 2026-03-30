@@ -224,7 +224,25 @@ done <<< "${data}"
 
 ヒアストリング (`<<<`) で渡せば、失敗は変数代入の時点で `set -e` が検知します。
 
-## POSIX mode について
+## 【補足】`set -o pipefail` と `head` は相性悪いので `awk` とかで代用しときな
+
+`set -o pipefail` 環境下で `some_command | head -n 5` のようなパイプを使うと、`head` が必要な行を読み終えた時点でパイプを閉じ、左側のコマンドが SIGPIPE を受けて非ゼロで終了します。`pipefail` はパイプ内の最後の非ゼロ終了コードを拾うため、スクリプトが意図せず停止することがあります。
+
+### NG 例
+
+```bash
+# NG: pipefail 環境下で SIGPIPE によりスクリプトが停止することがある
+some_command | head -n 5
+```
+
+### OK 例
+
+```bash
+# OK: awk を使えば SIGPIPE を発生させずに先頭 N 行を取得できる
+some_command | awk 'NR<=5'
+```
+
+## 【補足】POSIX mode について
 
 `set -o posix` を使うと bash を POSIX 準拠モードで動かせます。コマンド置換などの挙動をより厳密にする効果があります。
 
