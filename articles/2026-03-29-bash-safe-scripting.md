@@ -224,6 +224,55 @@ done <<< "${data}"
 
 ヒアストリング (`<<<`) で渡せば、失敗は変数代入の時点で `set -e` が検知します。
 
+### この代替パターンのトレードオフ
+
+`data=$(failing_command)` + `<<<` パターンには以下の制約がある：
+
+1. **メモリ使用量**: コマンドの出力全体をメモリに読み込む → 大量出力ではスケールしない
+2. **末尾改行の消失**: コマンド置換 `$()` は末尾の改行を取り除く bash の仕様
+   - 例: `printf "foo\n\n"` の出力末尾の改行が消える
+   - 末尾改行が意味を持つデータでは、元のプロセス置換と完全に等価にならない
+
+### ストリーム処理しつつ失敗を検知するパターン
+
+ストリームのまま処理したい場合の代替パターン。
+
+#### パターンA: 一時ファイルを使う
+
+```bash
+tmpfile=$(mktemp)
+failing_command > "${tmpfile}"
+exit_status=$?
+if [[ ${exit_status} -ne 0 ]]; then
+  rm -f "${tmpfile}"
+  exit "${exit_status}"
+fi
+while IFS= read -r line; do
+  echo "${line}"
+done < "${tmpfile}"
+rm -f "${tmpfile}"
+```
+
+- ストリーム処理可能（メモリ制約なし）
+- `$()` を使わないため末尾改行も保持される
+- ただし一時ファイルのクリーンアップが必要（`trap` で確実に行うと安全）
+
+#### パターンB: `pipefail` + 通常のパイプ
+
+`set -o pipefail` が有効な環境なら、通常のパイプで失敗を検知できる：
+
+```bash
+# set -o pipefail 環境ではパイプ左辺の失敗を自動検知
+failing_command | while IFS= read -r line; do
+  echo "${line}"
+done
+```
+
+- ストリーム処理可能
+- `failing_command` が失敗すると `pipefail` によりパイプライン全体が非ゼロで終了し、`set -e` がスクリプトを停止する
+- ただし `while` ループはサブシェルで実行されるため、ループ内で設定した変数は親シェルから参照できない
+- `set -o pipefail` なしでは左辺の失敗を検知できないため注意
+
 ## 【補足】`set -o pipefail` と `head` は相性悪いので `awk` とかで代用しよう
 
 `set -o pipefail` 環境下で `some_command | head -n 5` のようなパイプを使うと、`head` が必要な行を読み終えた時点でパイプを閉じ、左側のコマンドが SIGPIPE を受けて非ゼロで終了します。`pipefail` はパイプ内の最後の非ゼロ終了コードを拾うため、スクリプトが意図せず停止することがあります。
