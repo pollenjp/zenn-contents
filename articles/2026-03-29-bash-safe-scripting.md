@@ -127,7 +127,7 @@ start-main
 
 [shellcheck](https://github.com/koalaman/shellcheck) は bash/sh スクリプトの静的解析ツールです。上記のような罠を自動で検出してくれます。
 
-インストールは `apt install shellcheck` や `brew install shellcheck` で。
+インストールは `apt install shellcheck` や `brew install shellcheck` で。[mise](https://mise.jdx.dev/) を使っているなら `mise use shellcheck` でも OK です。
 
 実行は単純：
 
