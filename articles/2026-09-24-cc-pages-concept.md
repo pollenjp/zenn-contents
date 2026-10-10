@@ -3,7 +3,7 @@ title: "Claude Code の長い回答を、ターミナルで読むのをやめた
 emoji: "📄"
 type: "tech"
 topics: ["claudecode", "claude", "llm"]
-published: false
+published: true
 ---
 
 Claude Code に調べものや設計の相談をすると、ターミナルに長い回答が流れてきます。表は罫線がずれ、3 つの案を見比べるにはスクロールを行ったり来たり。図はそもそも描けません。読み終わる頃には、最初に書いてあった結論がどこにあったか分からなくなっています。
