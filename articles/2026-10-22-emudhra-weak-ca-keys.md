@@ -3,7 +3,7 @@ title: "CA の秘密鍵が「4」だった — eMudhra の中間 CA の件を HT
 emoji: "🔑"
 type: "tech"
 topics: ["tls", "https", "security", "pki", "ecdsa"]
-published: true
+published: false
 ---
 
 インターネットの「本物」を保証する認証局 (CA) の秘密鍵が、「4」でした。
