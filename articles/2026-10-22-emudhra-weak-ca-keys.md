@@ -3,7 +3,7 @@ title: "CA の秘密鍵が「4」だった — eMudhra の中間 CA の件を HT
 emoji: "🔑"
 type: "tech"
 topics: ["tls", "https", "security", "pki", "ecdsa"]
-published: false
+published: true
 ---
 
 インターネットの「本物」を保証する認証局 (CA) の秘密鍵が、「4」でした。
@@ -19,6 +19,10 @@ published: false
 :::message
 2026-10-22 時点の情報です。話はまだ動いていて、eMudhra の正式な事故報告はまだ出ていません。日付と時刻は UTC で書きます (日本時間は 9 時間足してください)。
 :::
+
+同じ内容を、約 12 分の解説動画にもしました。
+
+https://www.youtube.com/watch?v=r2F8RQnGTps
 
 ## HTTPS の「本物」は誰が保証しているか
 
