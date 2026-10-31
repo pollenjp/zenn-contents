@@ -8,6 +8,8 @@ published: true # true にして to-zenn.sh で zenn-contents に写すと、mer
 
 :::message
 2026-10-30 時点の情報。Ubuntu と RHEL はまだ修正版を出していない途中なので、このあと状況は変わるかも。
+
+2026-10-31 に、登 大遊さんの暫定対策の資料を「何をすればよいか」に追記した。
 :::
 
 ## はじめに
@@ -93,6 +95,31 @@ ss -Mln                           # multipath TCP で待ち受けているソケ
 
 修正版を待つ間は、届く相手を絞ることと、移し替えを無効のままにすることがつなぎになる。IP オプション付きの TCP を入口で捨てる nftables の規則も考えられるが、公式の回避策ではなく、効き目も試していない (動画で触れている)。
 
+### 追記 (2026-10-31): 登 大遊さんの暫定対策の資料
+
+10-31 に、登 大遊さんが暫定対策の資料 (PDF) を公開した。Claude Mythos 5.1 が作ったスライドに ChatGPT 6 Astra Pro の意見書を付けたもので、登さんは「内容の正確性等の保証はありません」と断っている。P.4 の 2 つの規則 (どちらか一方を入れる) を、原文のまま引用する。
+
+> iptables 版 (nftables 環境でも iptables-nft 互換レイヤが入っていれば利用可)
+
+```sh
+sudo iptables -t raw -I PREROUTING 1 -p tcp -m u32 --u32 '0>>24&0x0F=0x06:0x0F' -j DROP
+```
+
+> nftables 版 (推奨: counter で遮断数を観測できる。ファイルに保存して sudo nft -f ファイル名 で読込む)
+
+```nft
+table inet cve_2026_98432 {
+  chain pre { type filter hook prerouting priority -310; policy accept;
+    ip protocol tcp ip hdrlength gt 5 counter drop; }
+}
+```
+
+どちらも IP オプション付き (ヘッダ長の IHL が 5 より大きい) の TCP を、受信直後の PREROUTING で捨てる。行き先を決める前なので、Docker の公開ポートのように、ホストが転送するパケットにも効く (macvlan など、ホストの PREROUTING を通らない道は別)。
+
+資料は、規則を永続化してからホストを再起動するよう勧めている。規則は、入れる前にできた箱を消さないから。意見書は、規則そのものは「提示条件の下で妥当」とする一方、再起動の代わりの手順 (待ち受けを再起動して約 63 秒待つ) には誤りがあるとしている。オプションの無い再送の SYN は規則を通って前からある箱を読めるうえ、再送で期限が延びるので、約 63 秒待っても消えたとは言い切れないとのこと。
+
+自分は効き目を試していないし、資料も全カーネル版で実証済みではないと断っている (P.2)。本命はやはり、修正入りのカーネルに上げて再起動すること。
+
 ## おわりに
 
 ポインタを別の持ち主に渡すなら、まだ読んでいる処理をどう守るかを決めておく必要がある。コピーして渡すか (IPv6 はそうしていた)、RCU で守るなら解放も待つか。今回は、そのうち 2 か所だけが約束から外れていて、それが 11 年近く残っていた。
@@ -112,3 +139,5 @@ ss -Mln                           # multipath TCP で待ち受けているソケ
 - Anthropic「Discovering vulnerabilities with Claude」(2026-10-27): https://www.anthropic.com/research/discovering-vulnerabilities-with-claude
 - Go 1.24 のリリースノート (net の MPTCP の既定): https://go.dev/doc/go1.24
 - Go のセキュリティチームの告知 (2026-10-29。oss-security への転送): https://www.openwall.com/lists/oss-security/2026/10/30/1
+- 登 大遊さんの暫定対策の資料 (2026-10-31。PDF): https://dnobori.cyber.ipa.go.jp/ppt/download/20261031/261031-HowToProtect-Linux-Kernel-CVE-2026-98432.pdf
+- 登 大遊さんの X の投稿 (2026-10-31。資料を直した版の告知): https://x.com/dnobori/status/2116424369824309539
